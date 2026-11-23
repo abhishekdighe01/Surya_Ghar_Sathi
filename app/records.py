@@ -16,15 +16,16 @@ def load_records(json_path: Optional[str] = None) -> List[Record]:
     """
     Load records into Record dataclass objects.
     
-    Reads from a JSON file if specified and exists; otherwise loads from
-    data/sample_records.py as the foundational dataset.
+    Reads from data/records.json by default if it exists; otherwise loads from
+    data/sample_records.py as the fallback dataset.
     """
-    if json_path and os.path.exists(json_path):
-        with open(json_path, "r", encoding="utf-8") as f:
+    target_path = json_path or os.path.join(os.path.dirname(__file__), "..", "data", "records.json")
+    if os.path.exists(target_path):
+        with open(target_path, "r", encoding="utf-8") as f:
             raw_data = json.load(f)
             return [Record.from_dict(item) for item in raw_data]
 
-    # Default to sample_records dataset
+    # Fallback to in-memory sample records
     return [Record.from_dict(item) for item in SAMPLE_RECORDS]
 
 
