@@ -5,8 +5,6 @@
 #              and cosine similarity calculations.
 # ==============================================================================
 
-import math
-from typing import List, Union
 import numpy as np
 from sklearn.feature_extraction.text import HashingVectorizer
 
@@ -28,14 +26,14 @@ class EmbeddingGenerator:
             ngram_range=(1, 2)
         )
 
-    def embed_text(self, text: str) -> List[float]:
+    def embed_text(self, text: str) -> list[float]:
         """Convert a single text string into a normalized embedding vector."""
         if not text.strip():
             return [0.0] * self.n_features
         matrix = self.vectorizer.transform([text])
         return matrix.toarray()[0].tolist()
 
-    def embed_batch(self, texts: List[str]) -> List[List[float]]:
+    def embed_batch(self, texts: list[str]) -> list[list[float]]:
         """Convert a list of text strings into a list of normalized embedding vectors."""
         if not texts:
             return []
@@ -43,7 +41,7 @@ class EmbeddingGenerator:
         return matrix.toarray().tolist()
 
     @staticmethod
-    def cosine_similarity(vec_a: List[float], vec_b: List[float]) -> float:
+    def cosine_similarity(vec_a: list[float], vec_b: list[float]) -> float:
         """Calculate cosine similarity between two float vectors."""
         a = np.array(vec_a)
         b = np.array(vec_b)

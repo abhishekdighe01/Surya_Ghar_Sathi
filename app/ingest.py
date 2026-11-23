@@ -5,11 +5,12 @@
 #              documents, uses pandas for quality checks, and outputs data/records.json.
 # ==============================================================================
 
-import os
-import sys
 import json
 import logging
-from typing import List, Dict, Any
+import os
+import sys
+from typing import Any
+
 import pandas as pd
 
 # Add project root to sys.path
@@ -46,12 +47,12 @@ def clean_text(text: Any) -> str:
     return " ".join(text.strip().split())
 
 
-def process_records(raw_records: List[Dict[str, Any]]) -> pd.DataFrame:
+def process_records(raw_records: list[dict[str, Any]]) -> pd.DataFrame:
     """
     Clean, validate, and convert raw record dictionaries into a pandas DataFrame.
     Uses try/except blocks to gracefully handle and skip corrupt entries.
     """
-    valid_rows: List[Dict[str, Any]] = []
+    valid_rows: list[dict[str, Any]] = []
 
     for idx, item in enumerate(raw_records, start=1):
         try:
@@ -109,15 +110,15 @@ def run_pipeline(output_path: str = OUTPUT_JSON) -> int:
     4. Save to data/records.json
     """
     logger.info(f"Reading raw scheme records ({len(SAMPLE_RECORDS)} input items)...")
-    
+
     # Process into pandas DataFrame
     df = process_records(SAMPLE_RECORDS)
-    
+
     # Run inspections
     inspect_with_pandas(df)
 
     # Convert DataFrame rows into strongly-typed Record dataclasses
-    records_list: List[Record] = [
+    records_list: list[Record] = [
         Record.from_dict(row.to_dict()) for _, row in df.iterrows()
     ]
     logger.info(f"Successfully converted {len(records_list)} rows to Record dataclass objects.")

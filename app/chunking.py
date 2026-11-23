@@ -7,7 +7,7 @@
 
 import os
 import sys
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -16,15 +16,15 @@ from app.models import Record
 from app.records import load_records
 
 
-def split_text_with_overlap(text: str, chunk_size: int = 350, chunk_overlap: int = 50) -> List[str]:
+def split_text_with_overlap(text: str, chunk_size: int = 350, chunk_overlap: int = 50) -> list[str]:
     """
     Split a long string into overlapping character chunks without cutting words where possible.
-    
+
     Args:
         text: The input text to chunk.
         chunk_size: Maximum target character length for each chunk.
         chunk_overlap: Number of characters shared between consecutive chunks.
-        
+
     Returns:
         List of text chunks.
     """
@@ -32,13 +32,13 @@ def split_text_with_overlap(text: str, chunk_size: int = 350, chunk_overlap: int
     if len(cleaned) <= chunk_size:
         return [cleaned]
 
-    chunks: List[str] = []
+    chunks: list[str] = []
     start = 0
     text_len = len(cleaned)
 
     while start < text_len:
         end = start + chunk_size
-        
+
         # If not at the very end of text, find the nearest space to avoid cutting a word
         if end < text_len:
             space_idx = cleaned.rfind(" ", start, end)
@@ -62,13 +62,13 @@ def split_text_with_overlap(text: str, chunk_size: int = 350, chunk_overlap: int
 
 
 def chunk_records(
-    records: Optional[List[Record]] = None,
+    records: list[Record] | None = None,
     chunk_size: int = 350,
     chunk_overlap: int = 50
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Chunk official scheme records while strictly preserving source metadata.
-    
+
     Every resulting chunk preserves:
     - document_title
     - issuing_body
@@ -81,7 +81,7 @@ def chunk_records(
     if records is None:
         records = load_records()
 
-    chunked_docs: List[Dict[str, Any]] = []
+    chunked_docs: list[dict[str, Any]] = []
 
     for record in records:
         full_content = f"Topic: {record.topic}. Rule: {record.key_rule}"

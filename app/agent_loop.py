@@ -6,16 +6,16 @@
 #              without requiring heavy external agent frameworks.
 # ==============================================================================
 
-import os
-import sys
-import re
 import logging
-from typing import Dict, Any, List, Optional
+import os
+import re
+import sys
+from typing import Any
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.tools import solar_cfa_calculator, rag_search_tool
+from app.tools import rag_search_tool, solar_cfa_calculator
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("agent_loop")
@@ -34,7 +34,7 @@ class HandWrittenAgentLoop:
         self.default_bill = 2000.0          # Kopargaon benchmark (₹2,000/mo)
         self.default_terrace = 40.0         # Kopargaon benchmark (40 sq m)
 
-    def _extract_capacity(self, text: str) -> Optional[float]:
+    def _extract_capacity(self, text: str) -> float | None:
         """Extract requested solar capacity in kW from user query."""
         match = re.search(r"(\d+(?:\.\d+)?)\s*(?:kw|kilo\s*watt|kilowatt)", text, re.IGNORECASE)
         if match:
@@ -45,7 +45,7 @@ class HandWrittenAgentLoop:
                 return None
         return None
 
-    def _extract_bill(self, text: str) -> Optional[float]:
+    def _extract_bill(self, text: str) -> float | None:
         """Extract monthly electricity bill in INR from user query."""
         match = re.search(r"(?:rs\.?|₹|inr|bill\s*(?:of)?)\s*(\d+(?:,\d+)*(?:\.\d+)?)", text, re.IGNORECASE)
         if match:
@@ -56,7 +56,7 @@ class HandWrittenAgentLoop:
                 return None
         return None
 
-    def _extract_terrace(self, text: str) -> Optional[float]:
+    def _extract_terrace(self, text: str) -> float | None:
         """Extract terrace area in square metres or sq ft from user query."""
         sqm_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:sq(?:uare)?\s*m(?:etre|eter)?|sqm|m2)", text, re.IGNORECASE)
         if sqm_match:
@@ -77,21 +77,21 @@ class HandWrittenAgentLoop:
         self,
         question: str,
         user_name: str = "Homeowner",
-        monthly_bill: Optional[float] = None,
-        terrace_sqm: Optional[float] = None
-    ) -> Dict[str, Any]:
+        monthly_bill: float | None = None,
+        terrace_sqm: float | None = None
+    ) -> dict[str, Any]:
         """
         Execute the Reason -> Act -> Observe agent loop.
         """
         q = question.strip()
         q_lower = q.lower()
-        steps: List[str] = []
+        steps: list[str] = []
 
         # ----------------------------------------------------------------------
         # Phase 1: REASON (Intent analysis & parameter extraction)
         # ----------------------------------------------------------------------
         steps.append("Phase 1 (Reason): Analyzing homeowner intent and extracting parameters.")
-        
+
         extracted_capacity = self._extract_capacity(q)
         extracted_bill = self._extract_bill(q) or monthly_bill or self.default_bill
         extracted_terrace = self._extract_terrace(q) or terrace_sqm or self.default_terrace
@@ -113,8 +113,8 @@ class HandWrittenAgentLoop:
         # ----------------------------------------------------------------------
         # Phase 2: ACT (Execute safe deterministic tools)
         # ----------------------------------------------------------------------
-        calc_result: Optional[Dict[str, Any]] = None
-        rag_result: Optional[Dict[str, Any]] = None
+        calc_result: dict[str, Any] | None = None
+        rag_result: dict[str, Any] | None = None
 
         if wants_calculation:
             # Default to 3.0 kW (benchmark) if no capacity specified
@@ -130,7 +130,7 @@ class HandWrittenAgentLoop:
                 logger.error(f"Calculator tool execution error: {e}")
 
         if wants_rag or not wants_calculation:
-            steps.append(f"Phase 2 (Act): Calling 'rag_search_tool' to retrieve official MNRE guidelines.")
+            steps.append("Phase 2 (Act): Calling 'rag_search_tool' to retrieve official MNRE guidelines.")
             try:
                 rag_result = rag_search_tool(query=q)
             except Exception as e:
@@ -140,7 +140,7 @@ class HandWrittenAgentLoop:
         # Phase 3: OBSERVE (Evaluate tool outcomes)
         # ----------------------------------------------------------------------
         steps.append("Phase 3 (Observe): Validating tool observations and feasibility checks.")
-        citations: List[str] = []
+        citations: list[str] = []
         if calc_result:
             citations.append(calc_result["citation"])
         if rag_result and rag_result.get("citations"):
@@ -150,7 +150,7 @@ class HandWrittenAgentLoop:
         # Phase 4: SYNTHESIZE (Compose final response)
         # ----------------------------------------------------------------------
         steps.append("Phase 4 (Synthesize): Formulating structured grounded advisory.")
-        response_sections: List[str] = []
+        response_sections: list[str] = []
         response_sections.append(f"Hello {user_name}!")
 
         # Add calculation overview if computed
@@ -196,18 +196,18 @@ if __name__ == "__main__":
     print("=" * 75)
     print("🤖 TESTING HAND-WRITTEN AGENT LOOP (app/agent_loop.py)")
     print("=" * 75)
-    
+
     # Test Kopargaon persona inquiry
     query = "I have a monthly electricity bill of Rs 2000 and 40 sq m terrace in Kopargaon. How much subsidy and savings will I get for 3 kW, and what is the panel warranty?"
     result = agent_loop.run(question=query, user_name="Abhishek Dighe")
-    
+
     print("\n[AGENT EXECUTION TRACE]")
     for step in result["agent_steps"]:
         print(f" • {step}")
-        
+
     print("\n[FINAL SYNTHESIZED ANSWER]")
     print(result["answer"])
-    
+
     print("\n[CITATIONS]")
     for cit in result["citations"]:
         print(f" - {cit}")

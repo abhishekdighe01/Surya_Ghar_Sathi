@@ -6,23 +6,22 @@
 #              interactive 10-year solar payback charts, and persists user feedback.
 # ==============================================================================
 
-import os
-import sys
 import json
 import logging
+import os
+import sys
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any
 
+import pandas as pd
 import requests
 import streamlit as st
-import pandas as pd
 
 # Ensure project root is available for direct imports if API service is offline
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
     from app.graph import langgraph_agent
-    from app.rag import rag_pipeline
     from app.tools import solar_cfa_calculator
 except Exception:
     pass
@@ -84,7 +83,7 @@ def save_feedback(question: str, rating: str, answer_snippet: str):
     records = []
     if os.path.exists(FEEDBACK_FILE):
         try:
-            with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+            with open(FEEDBACK_FILE, encoding="utf-8") as f:
                 records = json.load(f)
         except Exception:
             records = []
@@ -109,7 +108,7 @@ def call_backend_agent(
     bill: float,
     terrace: float,
     approved: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Call FastAPI /agent endpoint with fallback to direct in-memory invocation."""
     payload = {
         "question": question,
@@ -139,7 +138,7 @@ def call_backend_agent(
     except Exception as ex:
         return {
             "question": question,
-            "answer": f"⚠️ Advisory error: {str(ex)}",
+            "answer": f"⚠️ Advisory error: {ex!s}",
             "steps": ["Fallback error handler"],
             "calculation": None,
             "citations": [],
@@ -149,7 +148,7 @@ def call_backend_agent(
 
 def generate_payback_dataframe(net_cost: float, annual_savings: float) -> pd.DataFrame:
     """Compute cumulative savings vs net investment trajectory over 10 years."""
-    years = list(range(0, 11))
+    years = list(range(11))
     cumulative_savings = [round(y * annual_savings, 2) for y in years]
     investment_line = [round(net_cost, 2)] * len(years)
 
@@ -170,12 +169,12 @@ with st.sidebar:
 
     user_name = st.text_input("Homeowner Name", value="Abhishek Dighe")
     user_city = st.text_input("Location / City", value="Kopargaon, Maharashtra")
-    
+
     st.divider()
     st.subheader("⚡ Electricity & Rooftop")
     monthly_bill = st.slider("Monthly MSEDCL Bill (₹)", min_value=500, max_value=10000, value=2000, step=100)
     terrace_sqm = st.slider("Shadow-Free Terrace Area (sq m)", min_value=10, max_value=150, value=40, step=5)
-    
+
     st.divider()
     st.subheader("⚙️ System Presets")
     preset_choice = st.selectbox(
@@ -212,7 +211,7 @@ with col1:
     st.metric(
         label="Eligible Central Subsidy (CFA)",
         value=f"₹{preview_calc['eligible_subsidy_inr']:,}",
-        delta=f"Capped at ₹78,000" if preview_calc['capacity_kw'] >= 3 else "₹30,000/kW"
+        delta="Capped at ₹78,000" if preview_calc['capacity_kw'] >= 3 else "₹30,000/kW"
     )
 with col2:
     st.metric(

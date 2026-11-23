@@ -5,11 +5,11 @@
 #              and portal FAQs into data/raw/ with timeouts and error handling.
 # ==============================================================================
 
-import os
-import sys
 import logging
+import os
+from typing import Any
+
 import requests
-from typing import Dict, Any
 
 # Configure structured logging
 logging.basicConfig(
@@ -82,10 +82,10 @@ SOURCES = [
 ]
 
 
-def fetch_document(source: Dict[str, Any], output_dir: str, timeout: int = 10) -> str:
+def fetch_document(source: dict[str, Any], output_dir: str, timeout: int = 10) -> str:
     """
     Download a single document with timeouts and error handling.
-    
+
     If network access is unavailable or fails, saves verified official fallback
     content to ensure downstream pipelines execute reliably.
     """
@@ -99,13 +99,13 @@ def fetch_document(source: Dict[str, Any], output_dir: str, timeout: int = 10) -
     try:
         response = requests.get(url, timeout=timeout, headers=headers)
         response.raise_for_status()
-        
+
         # Save downloaded content (binary or text)
         mode = "wb" if filename.endswith(".pdf") else "w"
         content = response.content if mode == "wb" else response.text
         with open(file_path, mode, encoding=None if mode == "wb" else "utf-8") as f:
             f.write(content)
-            
+
         logger.info(f"✅ Successfully downloaded {filename} ({len(response.content)} bytes).")
         return file_path
 
@@ -125,13 +125,13 @@ def fetch_all(output_dir: str = RAW_DATA_DIR) -> int:
     """Fetch all 3 target documents into the raw data directory."""
     os.makedirs(output_dir, exist_ok=True)
     logger.info(f"Starting document ingestion into: {os.path.abspath(output_dir)}")
-    
+
     success_count = 0
     for source in SOURCES:
         path = fetch_document(source, output_dir)
         if os.path.exists(path):
             success_count += 1
-            
+
     logger.info(f"Finished fetching: {success_count}/{len(SOURCES)} documents present in {output_dir}")
     return success_count
 

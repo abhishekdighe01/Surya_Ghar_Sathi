@@ -5,12 +5,13 @@
 #              with prompt injection, structured JSON parsing, and grounded fallback.
 # ==============================================================================
 
-import os
-import sys
 import json
-import re
 import logging
-from typing import Dict, Any, List, Optional
+import os
+import re
+import sys
+from typing import Any
+
 from dotenv import load_dotenv
 
 # Ensure project root is available for imports
@@ -32,7 +33,7 @@ TASK_PROMPT_PATH = os.path.join(PROMPTS_DIR, "task.txt")
 def load_prompt_file(filepath: str) -> str:
     """Read prompt text from file with graceful fallback."""
     if os.path.exists(filepath):
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             return f.read().strip()
     return ""
 
@@ -96,7 +97,7 @@ class LLMProvider:
         """Check if an active remote API client is configured."""
         return (self._gemini_client is not None) or (self._groq_client is not None)
 
-    def _extract_json(self, raw_text: str) -> Dict[str, Any]:
+    def _extract_json(self, raw_text: str) -> dict[str, Any]:
         """Safely parse JSON from raw LLM text, stripping Markdown code fences if present."""
         cleaned = raw_text.strip()
         # Remove ```json ... ``` or ``` ... ```
@@ -120,7 +121,7 @@ class LLMProvider:
                 "citations": ["PM Surya Ghar Operational Guidelines (June 2024)"]
             }
 
-    def _generate_fallback(self, question: str, user_name: str, matches: list) -> Dict[str, Any]:
+    def _generate_fallback(self, question: str, user_name: str, matches: list) -> dict[str, Any]:
         """
         Deterministic, hallucination-free fallback engine.
         Applies strict scheme rules and handles unanswerable questions (Q6).
@@ -170,10 +171,10 @@ class LLMProvider:
             "citations": []
         }
 
-    def generate(self, question: str, user_name: str = "Homeowner", context_override: Optional[str] = None) -> Dict[str, Any]:
+    def generate(self, question: str, user_name: str = "Homeowner", context_override: str | None = None) -> dict[str, Any]:
         """
         Generate a structured response for a homeowner question.
-        
+
         Args:
             question: The user's inquiry.
             user_name: Homeowner's name.

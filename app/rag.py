@@ -5,16 +5,16 @@
 #              integrating ChromaDB retrieval, prompt augmentation, and grounded synthesis.
 # ==============================================================================
 
+import logging
 import os
 import sys
-import logging
-from typing import Dict, Any, List, Optional
+from typing import Any
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.vectorstore import vector_store
 from app.llm import llm_engine
+from app.vectorstore import vector_store
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("rag")
@@ -35,11 +35,11 @@ class RAGPipeline:
         self,
         question: str,
         user_name: str = "Homeowner",
-        top_k: Optional[int] = None
-    ) -> Dict[str, Any]:
+        top_k: int | None = None
+    ) -> dict[str, Any]:
         """
         Execute full RAG workflow for a user question.
-        
+
         Steps:
         1. Query ChromaDB for top-k semantically relevant chunks.
         2. Evaluate retrieval quality (similarity score).

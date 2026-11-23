@@ -5,13 +5,13 @@
 #              and inspect structured scheme records.
 # ==============================================================================
 
-import sys
 import os
+import sys
 
 # Ensure the project root directory is on the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.records import load_records, search, count_by, get_by_id
+from app.records import count_by, get_by_id, load_records, search
 
 
 def format_record(record) -> str:

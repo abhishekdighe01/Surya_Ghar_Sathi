@@ -8,7 +8,7 @@
 
 import os
 import sys
-from typing import Dict, Any, Optional
+from typing import Any
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -31,21 +31,21 @@ def solar_cfa_calculator(
     capacity_kw: float,
     monthly_bill: float = 2000.0,
     available_terrace_sqm: float = 40.0
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Deterministic solar subsidy, area feasibility, and payback calculator.
-    
+
     Adheres strictly to MNRE PM Surya Ghar Operational Guidelines (June 2024):
     - First 2 kW: ₹30,000 per kW
     - 2 kW to 3 kW: ₹18,000 per kW
     - Above 3 kW: Fixed maximum cap of ₹78,000
     - Rooftop Area: ~10 sq m per kW
-    
+
     Args:
         capacity_kw: Proposed solar plant capacity in kilowatts (kW).
         monthly_bill: Current monthly electricity bill in INR (₹).
         available_terrace_sqm: Usable shadow-free terrace area in square metres.
-        
+
     Returns:
         Structured dictionary containing precise subsidy, area feasibility,
         estimated cost, monthly generation, annual savings, and payback period.
@@ -73,7 +73,7 @@ def solar_cfa_calculator(
     # 4. Energy Generation & Electricity Bill Offset
     monthly_generation_units = capacity_kw * AVG_DAILY_UNITS_PER_KW * 30.0  # kWh / month
     estimated_monthly_consumption_units = monthly_bill / MSEDCL_AVG_TARIFF_PER_UNIT
-    
+
     # Savings cannot exceed electricity bill consumption
     bill_offset_units = min(monthly_generation_units, estimated_monthly_consumption_units)
     monthly_savings = bill_offset_units * MSEDCL_AVG_TARIFF_PER_UNIT
@@ -106,14 +106,14 @@ def solar_cfa_calculator(
     }
 
 
-def rag_search_tool(query: str, top_k: int = 3) -> Dict[str, Any]:
+def rag_search_tool(query: str, top_k: int = 3) -> dict[str, Any]:
     """
     Query the SuryaGharSathi ChromaDB knowledge base for official scheme rules.
-    
+
     Args:
         query: Specific policy, warranty, or procedure question.
         top_k: Number of relevant chunks to retrieve.
-        
+
     Returns:
         Grounded answer with citations and confidence metrics.
     """
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     print("=" * 75)
     print("🛠️ TESTING AGENT TOOLS (app/tools.py)")
     print("=" * 75)
-    
+
     # Test Kopargaon Homeowner persona: 3 kW system, ₹2,000 bill, 40 sq m terrace
     calc_result = solar_cfa_calculator(capacity_kw=3.0, monthly_bill=2000.0, available_terrace_sqm=40.0)
     print("\n[Tool: solar_cfa_calculator (3 kW in Kopargaon)]")
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     print(f" • Required Terrace Area: {calc_result['required_terrace_sqm']} sq m (Available: {calc_result['available_terrace_sqm']} sq m -> Feasible: {calc_result['is_area_sufficient']})")
     print(f" • Monthly Generation: {calc_result['monthly_generation_units_kwh']} kWh (~₹{calc_result['estimated_monthly_savings_inr']:,}/month saved)")
     print(f" • Estimated Payback: {calc_result['payback_period_years']} years")
-    
+
     # Test RAG Tool
     print("\n[Tool: rag_search_tool]")
     rag_res = rag_search_tool("What is the warranty period on solar panels?")

@@ -4,15 +4,15 @@
 # Description: Day 2 - Domain data models using Python dataclasses.
 # ==============================================================================
 
-from dataclasses import dataclass, asdict
-from typing import Dict, Any
+from dataclasses import asdict, dataclass
+from typing import Any
 
 
 @dataclass
 class Record:
     """
     Represents an official rule or FAQ entry from PM Surya Ghar documents.
-    
+
     Attributes:
         id: Unique numerical identifier for the record.
         document_title: Official name of the publication or regulatory document.
@@ -30,12 +30,12 @@ class Record:
     key_rule: str
     source_url: str
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert the Record instance into a standard Python dictionary."""
         return asdict(self)
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "Record":
+    def from_dict(cls, data: dict[str, Any]) -> "Record":
         """Instantiate a Record object from a dictionary."""
         return cls(
             id=int(data["id"]),

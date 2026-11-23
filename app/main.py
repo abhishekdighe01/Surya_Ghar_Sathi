@@ -5,11 +5,10 @@
 #              for health checks, record retrieval, TF-IDF smart search, and user question logging.
 # ==============================================================================
 
+import json
 import os
 import sys
-import json
 from datetime import datetime
-from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,13 +17,12 @@ from pydantic import BaseModel, Field
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.models import Record
-from app.records import load_records, get_by_id
-from app.smart_search import smart_search_engine
-from app.llm import llm_engine
-from app.vectorstore import vector_store
-from app.rag import rag_pipeline
 from app.graph import langgraph_agent
+from app.llm import llm_engine
+from app.rag import rag_pipeline
+from app.records import get_by_id, load_records
+from app.smart_search import smart_search_engine
+from app.vectorstore import vector_store
 
 QUESTIONS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "questions.json")
 
@@ -83,7 +81,7 @@ class SearchRecordResponse(RecordResponse):
 
 class QuestionCreate(BaseModel):
     question: str = Field(..., min_length=3, max_length=500, example="How much subsidy do I get for a 3 kW solar plant?")
-    user_name: Optional[str] = Field(default="Anonymous Homeowner", example="Abhishek Dighe")
+    user_name: str | None = Field(default="Anonymous Homeowner", example="Abhishek Dighe")
 
 
 class QuestionResponse(BaseModel):
@@ -96,14 +94,14 @@ class QuestionResponse(BaseModel):
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
-    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
+    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
 
 
 class ChatResponse(BaseModel):
     answer: str
     confidence: str
     follow_up: str
-    citations: List[str]
+    citations: list[str]
 
 
 class SemanticChunkResponse(BaseModel):
@@ -115,8 +113,8 @@ class SemanticChunkResponse(BaseModel):
 
 class AskRequest(BaseModel):
     question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
-    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
-    top_k: Optional[int] = Field(default=3, ge=1, le=10)
+    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
+    top_k: int | None = Field(default=3, ge=1, le=10)
 
 
 class AskResponse(BaseModel):
@@ -125,25 +123,25 @@ class AskResponse(BaseModel):
     confidence: str
     retrieval_score: float
     follow_up: str
-    citations: List[str]
-    sources: List[dict]
+    citations: list[str]
+    sources: list[dict]
 
 
 class AgentRequest(BaseModel):
     question: str = Field(..., min_length=2, max_length=1000, example="Can I install a 3 kW solar plant on my 40 sq m roof in Kopargaon?")
-    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
-    monthly_bill: Optional[float] = Field(default=2000.0, example=2000.0)
-    terrace_sqm: Optional[float] = Field(default=40.0, example=40.0)
-    approved: Optional[bool] = Field(default=False, description="Approval flag for systems > 10 kW")
-    thread_id: Optional[str] = Field(default="default_session", description="Conversation thread identifier for memory")
+    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
+    monthly_bill: float | None = Field(default=2000.0, example=2000.0)
+    terrace_sqm: float | None = Field(default=40.0, example=40.0)
+    approved: bool | None = Field(default=False, description="Approval flag for systems > 10 kW")
+    thread_id: str | None = Field(default="default_session", description="Conversation thread identifier for memory")
 
 
 class AgentResponse(BaseModel):
     question: str
     answer: str
-    steps: List[str]
-    calculation: Optional[dict] = None
-    citations: List[str]
+    steps: list[str]
+    calculation: dict | None = None
+    citations: list[str]
     requires_approval: bool
     approved: bool
     thread_id: str
@@ -174,7 +172,7 @@ def get_health():
 
 @app.get(
     "/records",
-    response_model=List[RecordResponse],
+    response_model=list[RecordResponse],
     tags=["Scheme Records"],
     summary="List Official Scheme Records"
 )
@@ -206,7 +204,7 @@ def get_record(id: int):
 
 @app.get(
     "/search",
-    response_model=List[SearchRecordResponse],
+    response_model=list[SearchRecordResponse],
     tags=["Smart Search"],
     summary="Smart Search with TF-IDF and Cosine Similarity"
 )
@@ -229,7 +227,7 @@ def search_records(
 
 @app.get(
     "/search/semantic",
-    response_model=List[SemanticChunkResponse],
+    response_model=list[SemanticChunkResponse],
     tags=["Semantic Search"],
     summary="Semantic Vector Search using ChromaDB"
 )
@@ -260,7 +258,7 @@ def submit_question(payload: QuestionCreate):
     existing_questions = []
     if os.path.exists(QUESTIONS_FILE):
         try:
-            with open(QUESTIONS_FILE, "r", encoding="utf-8") as f:
+            with open(QUESTIONS_FILE, encoding="utf-8") as f:
                 existing_questions = json.load(f)
         except Exception:
             existing_questions = []
@@ -314,7 +312,7 @@ def chat_with_assistant(payload: ChatRequest):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"AI generation failed: {str(e)}"
+            detail=f"AI generation failed: {e!s}"
         )
 
 
@@ -340,7 +338,7 @@ def ask_solar_assistant(payload: AskRequest):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"RAG processing failed: {str(e)}"
+            detail=f"RAG processing failed: {e!s}"
         )
 
 
@@ -367,7 +365,7 @@ def run_solar_agent(payload: AgentRequest):
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Agent workflow failed: {str(e)}"
+            detail=f"Agent workflow failed: {e!s}"
         )
 
 

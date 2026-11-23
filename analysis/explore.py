@@ -6,7 +6,7 @@
 # ==============================================================================
 
 import os
-import json
+
 import pandas as pd
 
 RECORDS_JSON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "records.json")
@@ -61,7 +61,7 @@ def explore_data(json_path: str = RECORDS_JSON_PATH) -> None:
     # --------------------------------------------------------------------------
     # Combine all rules into a single corpus
     all_text = " ".join(df["key_rule"].tolist()).lower()
-    
+
     # Filter common stop words and count domain-specific terms
     tokens = [w.strip(".,;:()₹") for w in all_text.split() if len(w) > 3]
     word_series = pd.Series(tokens)

@@ -7,7 +7,7 @@
 
 import os
 import sys
-from typing import List, Tuple, Optional
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -21,14 +21,14 @@ from app.records import load_records
 class SmartSearchEngine:
     """
     Ranks scheme records against user queries using TF-IDF and Cosine Similarity.
-    
+
     TF-IDF (Term Frequency - Inverse Document Frequency) reflects how important
     a word is to a document in a collection. Cosine similarity calculates the
     cosine of the angle between query and document vectors in multi-dimensional space.
     """
 
-    def __init__(self, records: Optional[List[Record]] = None):
-        self.records: List[Record] = records if records is not None else load_records()
+    def __init__(self, records: list[Record] | None = None):
+        self.records: list[Record] = records if records is not None else load_records()
         self.vectorizer = TfidfVectorizer(
             stop_words="english",
             ngram_range=(1, 2),  # unigrams and bigrams for phrases like 'net metering'
@@ -37,7 +37,7 @@ class SmartSearchEngine:
         self._tfidf_matrix = None
         self._fit()
 
-    def _build_corpus(self) -> List[str]:
+    def _build_corpus(self) -> list[str]:
         """Combine topic, key_rule, and document_title into a searchable text block."""
         corpus = []
         for r in self.records:
@@ -51,15 +51,15 @@ class SmartSearchEngine:
         if corpus:
             self._tfidf_matrix = self.vectorizer.fit_transform(corpus)
 
-    def search(self, query: str, top_k: int = 3, min_score: float = 0.05) -> List[Tuple[Record, float]]:
+    def search(self, query: str, top_k: int = 3, min_score: float = 0.05) -> list[tuple[Record, float]]:
         """
         Rank records against the query using cosine similarity.
-        
+
         Args:
             query: The user search question or phrase.
             top_k: Maximum number of top records to return.
             min_score: Minimum cosine similarity score required for inclusion.
-            
+
         Returns:
             List of tuples: (Record, similarity_score_float).
         """
@@ -76,7 +76,7 @@ class SmartSearchEngine:
         # Get indices sorted by similarity score in descending order
         ranked_indices = scores.argsort()[::-1]
 
-        results: List[Tuple[Record, float]] = []
+        results: list[tuple[Record, float]] = []
         for idx in ranked_indices:
             score = float(scores[idx])
             if score >= min_score:

@@ -21,7 +21,7 @@ def main():
         print("3. Check Rooftop Solar Eligibility (Quick Check)")
         print("0. Exit SuryaGharSathi")
         print("=" * 45)
-        
+
         choice = input("Enter your choice (0-3): ").strip()
 
         # ----------------------------------------------------------------------
@@ -48,7 +48,7 @@ def main():
             print("    • First 2 kW = 2 × ₹30,000 = ₹60,000")
             print("    • Next 1 kW  = 1 × ₹18,000 = ₹18,000")
             print("    • Total Central Subsidy = ₹78,000 (Maximum cap for standard residential).")
-            
+
             print("\nQ2: How much terrace area is required for a 1 kW solar system?")
             print("A2: According to the National Portal FAQ, approximately 10 sq metres")
             print("    (around 100 sq ft) of unshaded, shadow-free roof space is required")
@@ -62,7 +62,7 @@ def main():
             try:
                 area_input = input("Enter your shadow-free terrace area (in square metres, e.g., 40): ").strip()
                 terrace_area = float(area_input)
-                
+
                 bill_input = input("Enter your average monthly electricity bill in ₹ (e.g., 2000): ").strip()
                 monthly_bill = float(bill_input)
 

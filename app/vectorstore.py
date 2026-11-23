@@ -5,14 +5,12 @@
 #              indexing, and retrieving document chunks with source metadata.
 # ==============================================================================
 
+import logging
 import os
 import sys
-import hashlib
-import logging
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 import chromadb
-from chromadb.config import Settings
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -57,7 +55,7 @@ class ChromaVectorStore:
         else:
             logger.info(f"Loaded existing ChromaDB collection with {current_count} indexed chunks.")
 
-    def add_chunks(self, chunks: List[Dict[str, Any]]) -> int:
+    def add_chunks(self, chunks: list[dict[str, Any]]) -> int:
         """
         Embed and insert chunks with metadata and content hashing to avoid duplication.
         """
@@ -85,16 +83,16 @@ class ChromaVectorStore:
         self,
         query_text: str,
         n_results: int = 3,
-        where_filter: Optional[Dict[str, Any]] = None
-    ) -> List[Dict[str, Any]]:
+        where_filter: dict[str, Any] | None = None
+    ) -> list[dict[str, Any]]:
         """
         Execute semantic nearest-neighbor search.
-        
+
         Args:
             query_text: The user's question or search phrase.
             n_results: Number of nearest chunks to retrieve.
             where_filter: Optional metadata filtering (e.g., by issuing_body or date).
-            
+
         Returns:
             List of matching chunk dictionaries with similarity scores and metadata.
         """
@@ -110,7 +108,7 @@ class ChromaVectorStore:
             where=where_filter
         )
 
-        matches: List[Dict[str, Any]] = []
+        matches: list[dict[str, Any]] = []
         if results and results.get("ids") and results["ids"][0]:
             ids = results["ids"][0]
             docs = results["documents"][0]

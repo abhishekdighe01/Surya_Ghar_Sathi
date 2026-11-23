@@ -6,19 +6,19 @@
 #              conditional routing, and a Human-in-the-Loop approval gate for >10 kW systems.
 # ==============================================================================
 
-import os
-import sys
-import re
 import logging
-from typing import Dict, Any, List, Optional, TypedDict
+import os
+import re
+import sys
+from typing import Any, TypedDict
 
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import END, START, StateGraph
 
-from app.tools import solar_cfa_calculator, rag_search_tool
+from app.tools import rag_search_tool, solar_cfa_calculator
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("graph_agent")
@@ -35,21 +35,21 @@ class SolarAgentState(TypedDict):
     user_name: str
     monthly_bill: float
     terrace_sqm: float
-    capacity_kw: Optional[float]
+    capacity_kw: float | None
     intent: str
     requires_approval: bool
     approved: bool
-    steps: List[str]
-    calculation: Optional[Dict[str, Any]]
-    rag_result: Optional[Dict[str, Any]]
+    steps: list[str]
+    calculation: dict[str, Any] | None
+    rag_result: dict[str, Any] | None
     answer: str
-    citations: List[str]
+    citations: list[str]
 
 
 # ------------------------------------------------------------------------------
 # Graph Nodes
 # ------------------------------------------------------------------------------
-def analyze_intent_node(state: SolarAgentState) -> Dict[str, Any]:
+def analyze_intent_node(state: SolarAgentState) -> dict[str, Any]:
     """
     Node 1: Evaluates homeowner inquiry, extracts parameters, and identifies
     commercial-scale capacity (>10 kW) requiring human approval.
@@ -116,7 +116,7 @@ def analyze_intent_node(state: SolarAgentState) -> Dict[str, Any]:
     }
 
 
-def approval_gate_node(state: SolarAgentState) -> Dict[str, Any]:
+def approval_gate_node(state: SolarAgentState) -> dict[str, Any]:
     """
     Node 2 (Approval Notice): Explains policy limits for >10 kW systems and requests confirmation.
     """
@@ -139,7 +139,7 @@ def approval_gate_node(state: SolarAgentState) -> Dict[str, Any]:
     }
 
 
-def execute_tools_node(state: SolarAgentState) -> Dict[str, Any]:
+def execute_tools_node(state: SolarAgentState) -> dict[str, Any]:
     """
     Node 3: Executes deterministic calculation and/or grounded RAG search.
     """
@@ -165,7 +165,7 @@ def execute_tools_node(state: SolarAgentState) -> Dict[str, Any]:
             logger.error(f"Error in solar_cfa_calculator: {e}")
 
     if intent in ("rag", "both"):
-        steps.append(f"[Node 3: execute_tools] Executing 'rag_search_tool' via ChromaDB.")
+        steps.append("[Node 3: execute_tools] Executing 'rag_search_tool' via ChromaDB.")
         try:
             rag_res = rag_search_tool(query=q)
         except Exception as e:
@@ -178,7 +178,7 @@ def execute_tools_node(state: SolarAgentState) -> Dict[str, Any]:
     }
 
 
-def synthesize_response_node(state: SolarAgentState) -> Dict[str, Any]:
+def synthesize_response_node(state: SolarAgentState) -> dict[str, Any]:
     """
     Node 4: Synthesizes final comprehensive homeowner response with citations.
     """
@@ -189,8 +189,8 @@ def synthesize_response_node(state: SolarAgentState) -> Dict[str, Any]:
     calc = state.get("calculation")
     rag = state.get("rag_result")
 
-    citations: List[str] = []
-    lines: List[str] = [f"Hello {user_name}!"]
+    citations: list[str] = []
+    lines: list[str] = [f"Hello {user_name}!"]
 
     if calc:
         citations.append(calc["citation"])
@@ -279,7 +279,7 @@ class LangGraphAgentRunner:
         terrace_sqm: float = 40.0,
         approved: bool = False,
         thread_id: str = "default_session"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute a graph invocation turn with session memory."""
         initial_state: SolarAgentState = {
             "question": question,
