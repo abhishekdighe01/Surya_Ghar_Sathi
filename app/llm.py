@@ -41,6 +41,19 @@ SYSTEM_PROMPT = load_prompt_file(SYSTEM_PROMPT_PATH)
 TASK_PROMPT_TEMPLATE = load_prompt_file(TASK_PROMPT_PATH)
 
 
+def is_network_available() -> bool:
+    """Check if internet connectivity is actively reachable."""
+    import socket
+    try:
+        socket.setdefaulttimeout(1.0)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("8.8.8.8", 53))
+        s.close()
+        return True
+    except Exception:
+        return False
+
+
 class LLMProvider:
     """
     Unified LLM wrapper supporting Google Gemini, Groq, and deterministic fallback.
@@ -72,6 +85,7 @@ class LLMProvider:
 
         elif self.provider == "groq" and self.groq_key and self.groq_key != "your_groq_api_key_here":
             try:
+                # pyrefly: ignore[missing-import]
                 from groq import Groq
                 self._groq_client = Groq(api_key=self.groq_key)
                 logger.info(f"Groq client initialized with model: {self.model_name}")
@@ -175,8 +189,8 @@ class LLMProvider:
                 for r, _ in matches
             ])
 
-        # If live API is configured, invoke model
-        if self._gemini_client is not None:
+        # If live API is configured and network is accessible, invoke model
+        if self._gemini_client is not None and is_network_available():
             try:
                 task_prompt = TASK_PROMPT_TEMPLATE.format(
                     context=context_str or "No direct official match found in local repository.",
@@ -185,13 +199,14 @@ class LLMProvider:
                 )
                 response = self._gemini_client.generate_content(
                     task_prompt,
-                    generation_config={"temperature": self.temperature}
+                    generation_config={"temperature": self.temperature},
+                    request_options={"timeout": 5.0}
                 )
                 return self._extract_json(response.text)
             except Exception as e:
                 logger.warning(f"Gemini API call failed ({e}). Falling back to local grounded engine.")
 
-        elif self._groq_client is not None:
+        elif self._groq_client is not None and is_network_available():
             try:
                 task_prompt = TASK_PROMPT_TEMPLATE.format(
                     context=context_str or "No direct official match found in local repository.",

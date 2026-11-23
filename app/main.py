@@ -23,6 +23,7 @@ from app.records import load_records, get_by_id
 from app.smart_search import smart_search_engine
 from app.llm import llm_engine
 from app.vectorstore import vector_store
+from app.rag import rag_pipeline
 
 QUESTIONS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "questions.json")
 
@@ -109,6 +110,22 @@ class SemanticChunkResponse(BaseModel):
     text: str
     metadata: dict
     similarity_score: float
+
+
+class AskRequest(BaseModel):
+    question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
+    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
+    top_k: Optional[int] = Field(default=3, ge=1, le=10)
+
+
+class AskResponse(BaseModel):
+    question: str
+    answer: str
+    confidence: str
+    retrieval_score: float
+    follow_up: str
+    citations: List[str]
+    sources: List[dict]
 
 
 # ------------------------------------------------------------------------------
@@ -277,3 +294,30 @@ def chat_with_assistant(payload: ChatRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"AI generation failed: {str(e)}"
         )
+
+
+@app.post(
+    "/ask",
+    response_model=AskResponse,
+    tags=["RAG"],
+    summary="Grounded RAG Solar Advisory"
+)
+def ask_solar_assistant(payload: AskRequest):
+    """
+    Day 8 - Grounded RAG query endpoint.
+    Retrieves dense semantic chunks from ChromaDB and synthesizes an authoritative,
+    hallucination-free answer with exact citations and confidence ratings.
+    """
+    try:
+        result = rag_pipeline.answer_question(
+            question=payload.question,
+            user_name=payload.user_name or "Homeowner",
+            top_k=payload.top_k or 3
+        )
+        return AskResponse(**result)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"RAG processing failed: {str(e)}"
+        )
+
