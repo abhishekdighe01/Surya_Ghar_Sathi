@@ -38,7 +38,7 @@ An AI-powered advisory assistant for Indian homeowners navigating the **PM Surya
 
 ---
 
-## 🚀 How to Run (Day 1)
+## 🚀 How to Run
 
 ### 1. Prerequisites
 - Python 3.10+ installed on your system.
@@ -48,16 +48,46 @@ An AI-powered advisory assistant for Indian homeowners navigating the **PM Surya
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-### 3. Run the Introduction Script
+### 3. Run the Foundational CLI Scripts (Day 1 & Day 2)
 ```powershell
+# Introduction script
 python day01_intro.py
+
+# Interactive menu
+python day01_menu.py
+
+# Records explorer
+python app/cli.py
 ```
 
-### 4. Run the Interactive Menu
+### 4. Run the Ingestion Pipeline (Day 3)
 ```powershell
-python day01_menu.py
+python app/fetch.py
+python app/ingest.py
+```
+
+### 5. Run the FastAPI Backend Service (Day 4)
+```powershell
+# Start FastAPI development server with hot-reload
+uvicorn app.main:app --reload
+
+# Open Swagger interactive documentation:
+# http://127.0.0.1:8000/docs
+
+# Open ReDoc documentation:
+# http://127.0.0.1:8000/redoc
+```
+
+### 6. Run Exploratory Data Analysis & Smart Search
+```powershell
+# Inspect dataset with pandas
+python analysis/explore.py
+
+# Test TF-IDF + Cosine Similarity search
+python app/smart_search.py
 ```
 
 ---
