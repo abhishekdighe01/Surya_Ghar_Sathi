@@ -6,7 +6,7 @@
 | **Day 2** | Structured Data Collection | 20 real records (MNRE Guidelines + FAQ), dataclass models, records CLI | **COMPLETED** | Commit `e618a32` & Day 2 CLI validated |
 | **Day 3** | Data Ingestion Pipeline | Ingest real data, clean text, handle errors, save `data/records.json` | **COMPLETED** | Ingestion pipeline & `records.json` verified |
 | **Day 4** | FastAPI Backend & Smart Search | REST API (`/health`, `/records`, `/search`), TF-IDF + Cosine search | **COMPLETED** | FastAPI endpoints & TF-IDF validated (tag: `week-1`) |
-| **Day 5** | LLM Fundamentals & Checkpoint 1 | LLM guide, 10 eval questions (incl. Q6 unknown), Checkpoint 1 review | **NOT STARTED** | Checkpoint 1 Review |
+| **Day 5** | LLM Fundamentals & Checkpoint 1 | LLM guide, 10 eval questions (incl. Q6 unknown), Checkpoint 1 review | **COMPLETED** | Eval set, prompt comparison & Checkpoint 1 complete (tag: `checkpoint-1`) |
 | **Day 6** | LLM Integration & Prompt Engineering | Groq/Gemini LLM wrapper, system prompt, `POST /chat`, structured JSON | **NOT STARTED** | — |
 | **Day 7** | Document Chunking & Embeddings | Metadata-preserving chunking, embeddings, ChromaDB vector store | **NOT STARTED** | — |
 | **Day 8** | RAG Implementation & Evaluation | Retrieve + Augment + Generate, citations, "I don't know" safeguard, 15-row eval | **NOT STARTED** | — |

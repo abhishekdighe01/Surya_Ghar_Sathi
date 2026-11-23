@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "question": "How much central subsidy will I get for a 3 kW rooftop solar system?",
+    "expected_answer": "Under official MNRE guidelines, the central financial assistance (CFA) is ₹30,000 per kW for the first 2 kW (₹60,000) plus ₹18,000 for the 3rd kW, totaling exactly ₹78,000.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 4 / Portal FAQ 3",
+    "expected_tool": "solar_cfa_calculator",
+    "can_answer": true,
+    "key_entities": ["3 kW", "₹78,000", "₹30,000/kW", "₹18,000/kW"]
+  },
+  {
+    "id": 2,
+    "question": "How much shadow-free terrace area do I need for a 1 kW or 3 kW setup?",
+    "expected_answer": "Approximately 10 square metres (~100 to 110 sq ft) of shadow-free rooftop space is required per 1 kW. A 3 kW setup requires approximately 30 square metres.",
+    "expected_source": "National Portal FAQs (Feb 2024), FAQ 4",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["10 sq m per kW", "30 sq m", "shadow-free"]
+  },
+  {
+    "id": 3,
+    "question": "What is the minimum warranty on solar panels and inverters under PM Surya Ghar?",
+    "expected_answer": "Solar PV modules must carry a minimum 10-year product warranty and 25-year performance warranty (minimum 80% output at 25 years). Grid-tied inverters must carry at least a 5-year replacement warranty.",
+    "expected_source": "National Portal FAQs (Feb 2024), FAQ 5",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["10-year module product", "25-year performance", "5-year inverter"]
+  },
+  {
+    "id": 4,
+    "question": "I want 4 kW on my house in Kopargaon. How much subsidy do I get, and do I still need net metering from MSEDCL?",
+    "expected_answer": "For a 4 kW system, the subsidy is strictly capped at ₹78,000 because central subsidy does not increase beyond 3 kW for general residential consumers. Net metering from MSEDCL remains mandatory to synchronize the plant with the grid.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 4 & Section 8",
+    "expected_tool": "solar_cfa_calculator",
+    "can_answer": true,
+    "key_entities": ["₹78,000 cap", "4 kW", "MSEDCL net metering mandatory"]
+  },
+  {
+    "id": 5,
+    "question": "My vendor says I must pay full cost first and subsidy comes later. Is that right, and in how many days is the subsidy released?",
+    "expected_answer": "Yes, under the open-market procurement model, the consumer pays the vendor the agreed project cost. After plant commissioning and joint inspection, the central subsidy is deposited directly into the consumer's bank account via DBT within 30 days.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 11 / Portal FAQ 7",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["consumer pays vendor", "DBT within 30 days", "commissioning"]
+  },
+  {
+    "id": 6,
+    "question": "What will MSEDCL's electricity tariff per unit be next year?",
+    "expected_answer": "I cannot confirm this from the available official documents. Electricity tariffs for MSEDCL are determined annually by the Maharashtra Electricity Regulatory Commission (MERC) and are not established in PM Surya Ghar scheme guidelines.",
+    "expected_source": "None (External / Unregulated future projection)",
+    "expected_tool": "none",
+    "can_answer": false,
+    "key_entities": ["cannot confirm", "MSEDCL tariff", "MERC"]
+  },
+  {
+    "id": 7,
+    "question": "Are imported Chinese solar panels eligible for central financial assistance under the scheme?",
+    "expected_answer": "No. To be eligible for central financial assistance (CFA), solar modules must comply with Domestic Content Requirement (DCR), utilizing solar cells and modules manufactured in India from the MNRE ALMM list.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 9",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["Domestic Content Requirement (DCR)", "ALMM", "imported not eligible"]
+  },
+  {
+    "id": 8,
+    "question": "Who is responsible for system maintenance after installation and for how long?",
+    "expected_answer": "The registered empanelled vendor is contractually mandated to provide 5 years of comprehensive Operation and Maintenance (O&M) at no additional charge to the consumer.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 7 / Portal FAQ 6",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["empanelled vendor", "5 years free O&M"]
+  },
+  {
+    "id": 9,
+    "question": "How does net metering adjust surplus solar units on my monthly electricity bill?",
+    "expected_answer": "A bi-directional net meter records both electricity imported from DISCOM and solar energy exported. If exported units exceed consumption, the net credit is carried over to offset future billing cycles per state regulatory guidelines.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 8 / Portal FAQ 8",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["bi-directional net meter", "credit carry forward", "energy accounting"]
+  },
+  {
+    "id": 10,
+    "question": "How long does MSEDCL take to grant technical feasibility approval after I apply on the National Portal?",
+    "expected_answer": "Under the operational guidelines, the distribution company (MSEDCL) must issue technical feasibility approval within 15 days of online submission. If not rejected within this timeframe, deemed approval is granted.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 6",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["15 days", "deemed approval", "MSEDCL feasibility"]
+  },
+  {
+    "id": 11,
+    "question": "What is the eligible central subsidy for a 2 kW solar setup?",
+    "expected_answer": "For a 2 kW system, the eligible central subsidy is ₹30,000 per kW, which equals exactly ₹60,000.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 4 / Portal FAQ 3",
+    "expected_tool": "solar_cfa_calculator",
+    "can_answer": true,
+    "key_entities": ["2 kW", "₹60,000", "₹30,000/kW"]
+  },
+  {
+    "id": 12,
+    "question": "Can Group Housing Societies or RWAs apply for PM Surya Ghar subsidy for common areas?",
+    "expected_answer": "Yes. Group Housing Societies and Residential Welfare Associations (GHS/RWA) are eligible for CFA for common facility rooftop solar installations up to 500 kW capacity at ₹18,000 per kW.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 2 & Section 4",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["GHS/RWA", "common areas", "₹18,000 per kW up to 500 kW"]
+  },
+  {
+    "id": 13,
+    "question": "What is the eligible subsidy for a 2.5 kW rooftop system?",
+    "expected_answer": "The subsidy is ₹30,000 per kW for the first 2 kW (₹60,000) plus ₹18,000 per kW for the remaining 0.5 kW (₹9,000), making a total of ₹69,000.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 4",
+    "expected_tool": "solar_cfa_calculator",
+    "can_answer": true,
+    "key_entities": ["2.5 kW", "₹69,000", "slab formula"]
+  },
+  {
+    "id": 14,
+    "question": "Where can a consumer file a complaint if the solar vendor fails to perform maintenance?",
+    "expected_answer": "Consumers can lodge complaints directly through the Grievance Redressal module on the National Portal (pmsuryaghar.gov.in). Unresolved vendor disputes can result in forfeiture of performance bank guarantees and blacklisting.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 12",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["National Portal grievance module", "blacklisting", "bank guarantee"]
+  },
+  {
+    "id": 15,
+    "question": "What is the target completion year and household target for PM Surya Ghar?",
+    "expected_answer": "The target is to install rooftop solar systems in 1 crore (10 million) residential households across India by FY 2026-27 with a total budget outlay of ₹75,021 crore.",
+    "expected_source": "MNRE Operational Guidelines (June 2024), Section 1",
+    "expected_tool": "rag_retrieval",
+    "can_answer": true,
+    "key_entities": ["1 crore households", "FY 2026-27", "₹75,021 crore"]
+  }
+]
