@@ -1,0 +1,19 @@
+You are evaluating a rooftop solar subsidy calculation for a homeowner under PM Surya Ghar.
+
+Official Scheme Subsidy Rules (MNRE June 2024 Guidelines, Section 4):
+- Slab 1: Up to 2 kW capacity: ₹30,000 per kW (Max ₹60,000 for 2 kW).
+- Slab 2: Additional capacity between 2 kW and 3 kW: ₹18,000 per kW (₹18,000 for 3rd kW).
+- Slab 3: Above 3 kW capacity: No additional subsidy (Total CFA capped at ₹78,000).
+- Roof space required: ~10 square metres shadow-free terrace area per kW.
+
+Retrieved Ground Truth:
+{context}
+
+Homeowner: {user_name}
+Target System Size / Inquiry: {question}
+
+Instructions:
+1. Explain the tiered slab calculation step-by-step so the consumer understands the math.
+2. Clearly state that capacity beyond 3 kW does not receive additional central subsidy.
+3. State the required shadow-free terrace area.
+4. Respond in valid JSON with keys: "answer", "confidence", "follow_up", and "citations".

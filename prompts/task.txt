@@ -1,0 +1,13 @@
+Here is the verified context retrieved from official PM Surya Ghar scheme documents:
+----------------------------------------
+{context}
+----------------------------------------
+
+Homeowner Name: {user_name}
+Homeowner Question: {question}
+
+Instructions:
+1. Examine the retrieved context carefully.
+2. If the context answers the question, provide a thorough, helpful explanation tailored to the homeowner, citing the specific source document and section.
+3. If the context does NOT contain information to answer the question (such as predicting future MSEDCL electricity tariffs), set "answer" to "I cannot confirm this from the available official documents." and set "confidence" to "low".
+4. Format your complete response as a single, valid JSON object with keys: "answer", "confidence" (high, medium, or low), "follow_up", and "citations" (a list of source titles).
