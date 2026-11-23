@@ -1,0 +1,3 @@
+"""
+SuryaGharSathi application package.
+"""
