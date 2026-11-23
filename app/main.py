@@ -22,6 +22,7 @@ from app.models import Record
 from app.records import load_records, get_by_id
 from app.smart_search import smart_search_engine
 from app.llm import llm_engine
+from app.vectorstore import vector_store
 
 QUESTIONS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "questions.json")
 
@@ -103,6 +104,13 @@ class ChatResponse(BaseModel):
     citations: List[str]
 
 
+class SemanticChunkResponse(BaseModel):
+    chunk_id: str
+    text: str
+    metadata: dict
+    similarity_score: float
+
+
 # ------------------------------------------------------------------------------
 # REST API Endpoints
 # ------------------------------------------------------------------------------
@@ -178,6 +186,24 @@ def search_records(
         rec_dict["similarity_score"] = score
         response_list.append(rec_dict)
     return response_list
+
+
+@app.get(
+    "/search/semantic",
+    response_model=List[SemanticChunkResponse],
+    tags=["Semantic Search"],
+    summary="Semantic Vector Search using ChromaDB"
+)
+def search_semantic(
+    q: str = Query(..., min_length=2, description="Semantic search query or question"),
+    limit: int = Query(default=3, ge=1, le=10, description="Number of nearest chunks")
+):
+    """
+    Search and retrieve official scheme document chunks using ChromaDB vector database
+    and dense embedding similarity.
+    """
+    hits = vector_store.query(query_text=q, n_results=limit)
+    return hits
 
 
 @app.post(

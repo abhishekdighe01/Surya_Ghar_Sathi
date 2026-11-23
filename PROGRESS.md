@@ -8,7 +8,7 @@
 | **Day 4** | FastAPI Backend & Smart Search | REST API (`/health`, `/records`, `/search`), TF-IDF + Cosine search | **COMPLETED** | FastAPI endpoints & TF-IDF validated (tag: `week-1`) |
 | **Day 5** | LLM Fundamentals & Checkpoint 1 | LLM guide, 10 eval questions (incl. Q6 unknown), Checkpoint 1 review | **COMPLETED** | Eval set, prompt comparison & Checkpoint 1 complete (tag: `checkpoint-1`) |
 | **Day 6** | LLM Integration & Prompt Engineering | Groq/Gemini LLM wrapper, system prompt, `POST /chat`, structured JSON | **COMPLETED** | LLM wrapper, prompts & `POST /chat` endpoint verified |
-| **Day 7** | Document Chunking & Embeddings | Metadata-preserving chunking, embeddings, ChromaDB vector store | **NOT STARTED** | — |
+| **Day 7** | Document Chunking & Embeddings | Metadata-preserving chunking, embeddings, ChromaDB vector store | **COMPLETED** | Persistent Chroma collection, chunking, embeddings & `/search/semantic` verified |
 | **Day 8** | RAG Implementation & Evaluation | Retrieve + Augment + Generate, citations, "I don't know" safeguard, 15-row eval | **NOT STARTED** | — |
 | **Day 9** | AI Agent & Solar CFA Calculator Tool | Tool calling, deterministic `solar_cfa_calculator`, LangGraph workflow | **NOT STARTED** | — |
 | **Day 10** | Streamlit UI & Checkpoint 2 | Chat UI, payback chart, citations, feedback, Checkpoint 2 live demo | **NOT STARTED** | Checkpoint 2 Review |
