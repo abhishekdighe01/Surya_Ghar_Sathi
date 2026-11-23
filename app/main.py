@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from app.models import Record
 from app.records import load_records, get_by_id
 from app.smart_search import smart_search_engine
+from app.llm import llm_engine
 
 QUESTIONS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "questions.json")
 
@@ -88,6 +89,18 @@ class QuestionResponse(BaseModel):
     question: str
     saved_at: str
     message: str
+
+
+class ChatRequest(BaseModel):
+    question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
+    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
+
+
+class ChatResponse(BaseModel):
+    answer: str
+    confidence: str
+    follow_up: str
+    citations: List[str]
 
 
 # ------------------------------------------------------------------------------
@@ -209,3 +222,32 @@ def submit_question(payload: QuestionCreate):
         saved_at=timestamp,
         message="Your question has been securely recorded for SuryaGharSathi AI analysis."
     )
+
+
+@app.post(
+    "/chat",
+    response_model=ChatResponse,
+    tags=["AI Assistant"],
+    summary="Chat with SuryaGharSathi AI"
+)
+def chat_with_assistant(payload: ChatRequest):
+    """
+    Accept homeowner questions, query the LLM provider with official MNRE grounding,
+    and return structured JSON with citations and follow-up guidance.
+    """
+    try:
+        response_data = llm_engine.generate(
+            question=payload.question,
+            user_name=payload.user_name or "Homeowner"
+        )
+        return ChatResponse(
+            answer=response_data.get("answer", "Unable to generate response."),
+            confidence=response_data.get("confidence", "medium"),
+            follow_up=response_data.get("follow_up", "Would you like to know more?"),
+            citations=response_data.get("citations", [])
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"AI generation failed: {str(e)}"
+        )
