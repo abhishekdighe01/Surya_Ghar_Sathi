@@ -90,6 +90,39 @@ python analysis/explore.py
 python app/smart_search.py
 ```
 
+### 7. Run Grounded LLM Chat (Day 6)
+```powershell
+python app/llm.py
+```
+
+### 8. Run Document Chunking & ChromaDB Vector Store (Day 7)
+```powershell
+# Verify chunking and embedding generation
+python app/chunking.py
+python app/embed.py
+
+# Verify ChromaDB semantic search
+python app/vectorstore.py
+```
+
+### 9. Run RAG Pipeline & Evaluation Benchmarking (Day 8)
+```powershell
+# Run the end-to-end RAG pipeline
+python app/rag.py
+
+# Run RAG evaluation across 15-question benchmark dataset
+python eval/run_eval.py
+```
+
+#### Day 8 RAG Benchmark Results:
+| Configuration | Retrieval Approach | Hit-Rate @ 3 | Refusal Accuracy (Q6) | Avg Latency |
+|---|---|:---:|:---:|:---:|
+| **Config A** | Lexical TF-IDF (k=3) | 60.0% | 0.0% | 1.2 ms |
+| **Config B (Winner)** | Dense ChromaDB Semantic RAG (k=3, overlap=50) | **66.7%** | **100.0%** | 31.5 ms |
+
+> **Key Finding:** Config B won with superior vocabulary-invariance, high semantic recall on technical solar terms, and zero hallucinations on unanswerable queries like Q6 (future MSEDCL tariff).
+
+
 ---
 
 ## ⚠️ Important Disclaimer
