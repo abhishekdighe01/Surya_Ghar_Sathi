@@ -141,6 +141,20 @@ python app/graph.py
 - **LangGraph StateGraph (`app/graph.py`)**: Stateful agent graph with session memory checkpointer and a Human-in-the-Loop safety gate requiring explicit confirmation for commercial-scale systems (>10 kW).
 - **Endpoint**: `POST /agent` exposed in FastAPI.
 
+### 11. Run Streamlit Interactive Web UI (Day 10)
+```powershell
+# Launch Streamlit web dashboard in your browser
+streamlit run ui/app.py
+```
+
+#### Streamlit UI Capabilities:
+- **Homeowner Profile Sidebar**: Real-time sliders for monthly MSEDCL bill (₹2,000) and available terrace area (40 sq m).
+- **Live Sizing & Subsidy Preview**: Live metric tiles for CFA subsidy (₹78,000), net outlay (₹72,000), and feasibility status.
+- **Interactive 10-Year Payback Chart**: Visualizes investment break-even trajectory over 10 years using Streamlit interactive charts.
+- **Grounded Chat with Expandable Citations**: Direct conversation with the LangGraph agent and ChromaDB RAG store.
+- **Feedback Loop**: 👍 / 👎 buttons saving ratings directly to `data/feedback.json`.
+- **Checkpoint 2 Demo Script**: Available in [`eval/checkpoint2_demo.md`](file:///e:/SuryaGharSathi/eval/checkpoint2_demo.md).
+
 ---
 
 ## ⚠️ Important Disclaimer
