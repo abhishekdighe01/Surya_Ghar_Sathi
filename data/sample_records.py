@@ -1,0 +1,290 @@
+# ==============================================================================
+# File: data/sample_records.py
+# Project: SuryaGharSathi (सूर्याघर साथी)
+# Description: Day 2 - 20 structured records covering the 12 numbered sections
+#              of the MNRE Operational Guidelines (June 2024) and the first 8
+#              questions of the National Portal FAQs (February 2024).
+# ==============================================================================
+
+GUIDELINE_TITLE = (
+    "Operational Guidelines for Implementation of PM Surya Ghar: "
+    "Muft Bijli Yojana (CFA Component to Residential Consumers)"
+)
+GUIDELINE_ISSUER = "Ministry of New and Renewable Energy (MNRE), Govt. of India"
+GUIDELINE_DATE = "2024-06-25"
+GUIDELINE_URL = (
+    "https://mnre.gov.in/en/notice/operational-guidelines-for-implementation-of-"
+    "the-component-central-financial-assistance-to-residential-consumers-of-pm-surya-"
+    "ghar-muft-bijli-yojana/"
+)
+
+FAQ_TITLE = "PM Surya Ghar: Muft Bijli Yojana - National Portal Frequently Asked Questions (FAQs)"
+FAQ_ISSUER = "National Portal for Rooftop Solar / MNRE"
+FAQ_DATE = "2024-02-15"
+FAQ_URL = "https://pmsuryaghar.gov.in/faq"
+
+SAMPLE_RECORDS = [
+    # --------------------------------------------------------------------------
+    # Section 1 to 12: MNRE Operational Guidelines (June 2024)
+    # --------------------------------------------------------------------------
+    {
+        "id": 1,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Background and Objectives",
+        "key_rule": (
+            "The PM Surya Ghar: Muft Bijli Yojana aims to install grid-connected rooftop solar "
+            "systems in 1 crore residential households across India by FY 2026-27, providing "
+            "up to 300 units of free electricity every month and reducing carbon footprint."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 2,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Scheme Scope and Target",
+        "key_rule": (
+            "The scheme applies exclusively to the residential sector including individual "
+            "households and Group Housing Societies / Residential Welfare Associations (GHS/RWA) "
+            "for common area facilities across all States and Union Territories in India."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 3,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Consumer Eligibility",
+        "key_rule": (
+            "An applicant must be an Indian citizen, possess a residential electricity connection "
+            "in their name from the local DISCOM (e.g., MSEDCL in Maharashtra), own suitable roof rights "
+            "or terrace space, and have not previously availed central financial assistance for the same premises."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 4,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "CFA Subsidy Structure and Slabs",
+        "key_rule": (
+            "Central Financial Assistance (CFA) is provided as a fixed subsidy slab: ₹30,000 per kW "
+            "for systems up to 2 kW capacity, and ₹18,000 per kW for additional capacity between 2 kW "
+            "and 3 kW. The maximum eligible central subsidy for any general residential system is strictly "
+            "capped at ₹78,000 (achieved at 3 kW). Systems larger than 3 kW do not receive additional subsidy."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 5,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "National Portal Implementation",
+        "key_rule": (
+            "All registrations, application submissions, technical feasibility approvals, vendor selections, "
+            "metering requests, and subsidy claims must be processed end-to-end through the unified "
+            "National Portal (pmsuryaghar.gov.in)."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 6,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "DISCOM Technical Feasibility Approval",
+        "key_rule": (
+            "The local distribution utility (such as MSEDCL) must issue technical feasibility approval "
+            "within 15 days of online application submission. If not rejected within this timeframe, "
+            "deemed technical approval is granted under national guidelines."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 7,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Vendor Registration and Procurement",
+        "key_rule": (
+            "Consumers can choose any registered vendor from the National Portal under an open-market "
+            "model. Vendors must submit performance guarantees, follow MNRE standards, enter into a standard "
+            "bilateral agreement with the consumer, and provide 5 years of comprehensive maintenance."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 8,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Net Metering and Grid Interconnection",
+        "key_rule": (
+            "A bi-directional net meter must be installed and synchronized with the local grid. Surplus power "
+            "generated during the day is exported to the DISCOM grid, and net energy accounting is reflected "
+            "in the monthly electricity bill in accordance with state electricity regulatory commission regulations."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 9,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Quality Standards and DCR Requirements",
+        "key_rule": (
+            "To qualify for CFA, solar modules must strictly comply with Domestic Content Requirement (DCR), "
+            "utilizing solar cells and modules manufactured in India and listed on the Approved List of Models "
+            "and Manufacturers (ALMM) issued by MNRE. Inverters must comply with BIS standards."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 10,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Inspection and Commissioning",
+        "key_rule": (
+            "After plant installation, the vendor submits a work completion report on the portal. DISCOM officials "
+            "conduct a site inspection, verify net meter integration, and issue a formal Commissioning Certificate "
+            "which is uploaded directly to the National Portal."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 11,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "CFA Claim and DBT Disbursement",
+        "key_rule": (
+            "Upon issuance of the commissioning certificate, the consumer submits bank account details and a cancelled "
+            "cheque on the portal. The central financial assistance (subsidy) is released directly into the consumer's "
+            "bank account via Direct Benefit Transfer (DBT) within 30 days of verification."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+    {
+        "id": 12,
+        "document_title": GUIDELINE_TITLE,
+        "issuing_body": GUIDELINE_ISSUER,
+        "date_issued": GUIDELINE_DATE,
+        "topic": "Grievance Redressal and Consumer Protection",
+        "key_rule": (
+            "Consumers can register complaints regarding vendor performance, installation delays, or DISCOM net metering "
+            "on the National Portal grievance redressal module. Unresolved vendor disputes lead to blacklisting and "
+            "forfeiture of the vendor's bank guarantee."
+        ),
+        "source_url": GUIDELINE_URL
+    },
+
+    # --------------------------------------------------------------------------
+    # Questions 1 to 8: National Portal FAQs (February 2024)
+    # --------------------------------------------------------------------------
+    {
+        "id": 13,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 1: Scheme Overview and Applicability",
+        "key_rule": (
+            "PM Surya Ghar: Muft Bijli Yojana provides free electricity up to 300 units per month through rooftop "
+            "solar installations. The scheme is open to residential households with individual electricity connections "
+            "and suitable shadow-free rooftops."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 14,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 2: Benchmark Cost and Pricing",
+        "key_rule": (
+            "Earlier Phase-II schemes utilized DISCOM-discovered L1 benchmark pricing. Under PM Surya Ghar, prices are "
+            "market-determined by vendors registered on the National Portal. Typical market turnkey costs range between "
+            "₹50,000 to ₹65,000 per kW depending on module technology, inverter specifications, and mounting structure height."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 15,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 3: Subsidy Calculation Details",
+        "key_rule": (
+            "Subsidies are fixed across India: ₹30,000 for 1 kW, ₹60,000 for 2 kW, and ₹78,000 for 3 kW. For systems between "
+            "2 kW and 3 kW, subsidy is ₹60,000 plus ₹18,000 per additional kW. Residential systems above 3 kW receive a flat ₹78,000 CFA."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 16,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 4: Rooftop Area Requirements",
+        "key_rule": (
+            "As a rule of thumb, approximately 10 square metres (about 100 to 110 square feet) of shadow-free rooftop "
+            "area is required for every 1 kW capacity of solar PV installation. For a 3 kW system, approximately 30 sq metres is required."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 17,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 5: Minimum Warranties Required",
+        "key_rule": (
+            "Solar PV modules must carry a minimum 10-year product warranty and a 25-year performance warranty (generating "
+            "at least 80% of rated output at year 25). Grid-tied solar inverters must carry a minimum 5-year replacement warranty."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 18,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 6: Operation and Maintenance (O&M)",
+        "key_rule": (
+            "The registered empanelled vendor is obligated to provide 5 years of comprehensive Operation and Maintenance "
+            "(O&M) including routine system health checks, fault rectifications, and inverter servicing at no extra cost to the consumer."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 19,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 7: Vendor Selection and Payment Terms",
+        "key_rule": (
+            "Consumers select vendors through the National Portal and execute a standard agreement. The consumer pays the "
+            "mutually agreed project cost to the vendor, and the central government deposits the eligible subsidy directly into "
+            "the consumer's bank account after plant commissioning."
+        ),
+        "source_url": FAQ_URL
+    },
+    {
+        "id": 20,
+        "document_title": FAQ_TITLE,
+        "issuing_body": FAQ_ISSUER,
+        "date_issued": FAQ_DATE,
+        "topic": "FAQ 8: Net Metering Energy Accounting",
+        "key_rule": (
+            "The bi-directional net meter records both electricity imported from DISCOM and solar power exported. If exported "
+            "units exceed imported units in a billing cycle, the net credit is carried forward to subsequent months per state regulatory commission rules."
+        ),
+        "source_url": FAQ_URL
+    }
+]
