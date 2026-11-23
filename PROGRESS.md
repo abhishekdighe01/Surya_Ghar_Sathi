@@ -2,7 +2,7 @@
 
 | Day | Date / Session | Objective | Status | Commit / Notes |
 |:---:|:---|:---|:---:|:---|
-| **Day 1** | Project Setup & GitHub Repository | Setup environment, project card, `day01_intro.py`, `day01_menu.py`, Git repo | **IN PROGRESS** | Pending student execution & verification |
+| **Day 1** | Project Setup & GitHub Repository | Setup environment, project card, `day01_intro.py`, `day01_menu.py`, Git repo | **COMPLETED** | Commit `50635a3` |
 | **Day 2** | Structured Data Collection | 20 real records (MNRE Guidelines + FAQ), dataclass models, records CLI | **NOT STARTED** | — |
 | **Day 3** | Data Ingestion Pipeline | Ingest real data, clean text, handle errors, save `data/records.json` | **NOT STARTED** | — |
 | **Day 4** | FastAPI Backend & Smart Search | REST API (`/health`, `/records`, `/search`), TF-IDF + Cosine search | **NOT STARTED** | Checkpoint 1 Prep |
