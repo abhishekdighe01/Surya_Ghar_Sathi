@@ -10,7 +10,7 @@
 | **Day 6** | LLM Integration & Prompt Engineering | Groq/Gemini LLM wrapper, system prompt, `POST /chat`, structured JSON | **COMPLETED** | LLM wrapper, prompts & `POST /chat` endpoint verified |
 | **Day 7** | Document Chunking & Embeddings | Metadata-preserving chunking, embeddings, ChromaDB vector store | **COMPLETED** | Persistent Chroma collection, chunking, embeddings & `/search/semantic` verified |
 | **Day 8** | RAG Implementation & Evaluation | Retrieve + Augment + Generate, citations, "I don't know" safeguard, 15-row eval | **COMPLETED** | RAG pipeline, `POST /ask`, eval benchmark Config B winner (66.7% hit-rate@3, 100% refusal) |
-| **Day 9** | AI Agent & Solar CFA Calculator Tool | Tool calling, deterministic `solar_cfa_calculator`, LangGraph workflow | **NOT STARTED** | — |
+| **Day 9** | AI Agent & Solar CFA Calculator Tool | Tool calling, deterministic `solar_cfa_calculator`, LangGraph workflow | **COMPLETED** | `app/tools.py`, `app/agent_loop.py`, `app/graph.py`, `POST /agent` (memory + >10kW approval) |
 | **Day 10** | Streamlit UI & Checkpoint 2 | Chat UI, payback chart, citations, feedback, Checkpoint 2 live demo | **NOT STARTED** | Checkpoint 2 Review |
 | **Day 11** | Testing & Code Quality | Pytest unit/API/agent tests with mocks, Ruff linting, test suite | **NOT STARTED** | — |
 | **Day 12** | Dockerization & CI/CD | Dockerfile, docker-compose, GitHub Actions CI workflow | **NOT STARTED** | — |

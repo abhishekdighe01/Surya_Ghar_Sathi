@@ -24,6 +24,7 @@ from app.smart_search import smart_search_engine
 from app.llm import llm_engine
 from app.vectorstore import vector_store
 from app.rag import rag_pipeline
+from app.graph import langgraph_agent
 
 QUESTIONS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "questions.json")
 
@@ -126,6 +127,27 @@ class AskResponse(BaseModel):
     follow_up: str
     citations: List[str]
     sources: List[dict]
+
+
+class AgentRequest(BaseModel):
+    question: str = Field(..., min_length=2, max_length=1000, example="Can I install a 3 kW solar plant on my 40 sq m roof in Kopargaon?")
+    user_name: Optional[str] = Field(default="Homeowner", example="Abhishek Dighe")
+    monthly_bill: Optional[float] = Field(default=2000.0, example=2000.0)
+    terrace_sqm: Optional[float] = Field(default=40.0, example=40.0)
+    approved: Optional[bool] = Field(default=False, description="Approval flag for systems > 10 kW")
+    thread_id: Optional[str] = Field(default="default_session", description="Conversation thread identifier for memory")
+
+
+class AgentResponse(BaseModel):
+    question: str
+    answer: str
+    steps: List[str]
+    calculation: Optional[dict] = None
+    citations: List[str]
+    requires_approval: bool
+    approved: bool
+    thread_id: str
+
 
 
 # ------------------------------------------------------------------------------
@@ -320,4 +342,32 @@ def ask_solar_assistant(payload: AskRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"RAG processing failed: {str(e)}"
         )
+
+
+@app.post(
+    "/agent",
+    response_model=AgentResponse,
+    tags=["AI Agent"],
+    summary="LangGraph Multi-Step Solar Advisory Agent"
+)
+def run_solar_agent(payload: AgentRequest):
+    """
+    Day 9 - LangGraph Solar Agent with memory, tool routing, and human-in-the-loop approval.
+    """
+    try:
+        result = langgraph_agent.run(
+            question=payload.question,
+            user_name=payload.user_name or "Homeowner",
+            monthly_bill=payload.monthly_bill or 2000.0,
+            terrace_sqm=payload.terrace_sqm or 40.0,
+            approved=payload.approved or False,
+            thread_id=payload.thread_id or "default_session"
+        )
+        return AgentResponse(**result)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Agent workflow failed: {str(e)}"
+        )
+
 

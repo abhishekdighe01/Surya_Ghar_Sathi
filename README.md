@@ -123,6 +123,24 @@ python eval/run_eval.py
 > **Key Finding:** Config B won with superior vocabulary-invariance, high semantic recall on technical solar terms, and zero hallucinations on unanswerable queries like Q6 (future MSEDCL tariff).
 
 
+### 10. Run AI Agent & Solar CFA Calculator (Day 9)
+```powershell
+# 1. Test deterministic solar calculator and RAG tools
+python app/tools.py
+
+# 2. Test lightweight hand-written Reason-Act-Observe loop
+python app/agent_loop.py
+
+# 3. Test LangGraph StateGraph agent with memory and >10 kW approval gate
+python app/graph.py
+```
+
+#### Day 9 Key Highlights:
+- **`solar_cfa_calculator`**: Deterministic calculator strictly implementing MNRE June 2024 subsidy slabs (₹30,000/kW for <= 2 kW, ₹18,000/kW for 2-3 kW, max ₹78,000 cap), rooftop feasibility (~10 sq m/kW), and payback period.
+- **Hand-written Agent Loop**: Reason -> Act -> Observe loop without heavy external frameworks.
+- **LangGraph StateGraph (`app/graph.py`)**: Stateful agent graph with session memory checkpointer and a Human-in-the-Loop safety gate requiring explicit confirmation for commercial-scale systems (>10 kW).
+- **Endpoint**: `POST /agent` exposed in FastAPI.
+
 ---
 
 ## ⚠️ Important Disclaimer
