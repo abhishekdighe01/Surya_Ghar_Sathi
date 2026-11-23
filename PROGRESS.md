@@ -12,8 +12,8 @@
 | **Day 8** | RAG Implementation & Evaluation | Retrieve + Augment + Generate, citations, "I don't know" safeguard, 15-row eval | **COMPLETED** | RAG pipeline, `POST /ask`, eval benchmark Config B winner (66.7% hit-rate@3, 100% refusal) |
 | **Day 9** | AI Agent & Solar CFA Calculator Tool | Tool calling, deterministic `solar_cfa_calculator`, LangGraph workflow | **COMPLETED** | `app/tools.py`, `app/agent_loop.py`, `app/graph.py`, `POST /agent` (memory + >10kW approval) |
 | **Day 10** | Streamlit UI & Checkpoint 2 | Chat UI, payback chart, citations, feedback, Checkpoint 2 live demo | **COMPLETED** | `ui/app.py`, `eval/checkpoint2_demo.md`, feedback collector, tag `checkpoint-2` |
-| **Day 11** | Testing & Code Quality | Pytest unit/API/agent tests with mocks, Ruff linting, test suite | **NOT STARTED** | — |
-| **Day 12** | Dockerization & CI/CD | Dockerfile, docker-compose, GitHub Actions CI workflow | **NOT STARTED** | — |
+| **Day 11** | Testing, Quality & Dockerization | Pytest test suite (24 tests green), Ruff clean (0 errors), Dockerfile & docker-compose | **COMPLETED** | `tests/`, `pyproject.toml`, `Dockerfile`, `docker-compose.yml`, `.dockerignore` |
+| **Day 12** | CI/CD with GitHub Actions & Deployment | GitHub Actions CI workflow, PR review flow, public deployment configs | **NOT STARTED** | — |
 | **Day 13** | Production Hardening & Observability | Latency/token tracking, cache, prompt injection defense, safety disclaimers | **NOT STARTED** | — |
 | **Day 14** | Public Deployment & Interview Prep | Render/Hugging Face deployment, public URL testing, `interview.md` | **NOT STARTED** | — |
 | **Day 15** | Architecture & Final Demo | Architecture diagram, viva prep, final tag, 5-minute presentation | **NOT STARTED** | Checkpoint 3 / Final Demo |

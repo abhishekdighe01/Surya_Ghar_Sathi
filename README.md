@@ -155,6 +155,34 @@ streamlit run ui/app.py
 - **Feedback Loop**: 👍 / 👎 buttons saving ratings directly to `data/feedback.json`.
 - **Checkpoint 2 Demo Script**: Available in [`eval/checkpoint2_demo.md`](file:///e:/SuryaGharSathi/eval/checkpoint2_demo.md).
 
+### 12. Run Automated Test Suite & Code Quality (Day 11)
+```powershell
+# Run the 24-test pytest suite
+pytest
+
+# Run Ruff linter to verify code quality
+ruff check .
+```
+
+#### Test Suite Breakdown (24 Tests, 100% Green):
+- `tests/test_records.py`: Dataclass models, field validations, count by issuing body.
+- `tests/test_calculator.py`: Official MNRE subsidy slabs (1 kW, 2 kW, 3 kW, 5 kW cap), rooftop area feasibility, and payback math.
+- `tests/test_search.py`: Scikit-learn TF-IDF and ChromaDB dense semantic vector retrieval.
+- `tests/test_rag.py`: RAG question answering, citation verification, and Q6 unanswerable refusal.
+- `tests/test_api.py`: FastAPI endpoints (`/health`, `/records`, `/search`, `/questions`, `/ask`, `/agent`).
+
+---
+
+### 13. Run with Docker & Docker Compose (Day 11)
+```powershell
+# Build and launch both FastAPI backend and Streamlit UI in containers:
+docker compose up --build
+
+# Once started:
+# - Streamlit Web Dashboard: http://localhost:8501
+# - FastAPI REST API & Swagger Docs: http://localhost:8000/docs
+```
+
 ---
 
 ## ⚠️ Important Disclaimer
