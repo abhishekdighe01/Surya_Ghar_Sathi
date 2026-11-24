@@ -187,6 +187,10 @@ with st.sidebar:
         st.rerun()
 
     st.markdown("---")
+    st.info(
+        "⚠️ **Safety Note:** Information from official MNRE sources, not financial advice. "
+        "Confirm the final amounts with your DISCOM and the national portal before paying a vendor."
+    )
     st.caption("SuryaGharSathi v1.0 • CSE AI & ML, Sanjivani")
 
 
@@ -357,3 +361,9 @@ if active_input:
             "citations": citations,
             "calculation": calc
         })
+
+st.markdown("---")
+st.caption(
+    "⚠️ **Safety Note:** Information from official MNRE sources, not financial advice. "
+    "Confirm the final amounts with your DISCOM and the national portal before paying a vendor."
+)

@@ -125,6 +125,15 @@ class ChromaVectorStore:
                     "similarity_score": similarity
                 })
 
+        # Recency-aware tie-breaker: when similarity scores are close, newest document wins (e.g. June 2024 > Feb 2024)
+        matches.sort(
+            key=lambda x: (
+                round(x["similarity_score"], 2),
+                x["metadata"].get("date_issued", "")
+            ),
+            reverse=True
+        )
+
         return matches
 
 

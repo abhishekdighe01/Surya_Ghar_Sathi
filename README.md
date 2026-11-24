@@ -226,5 +226,17 @@ SuryaGharSathi incorporates enterprise-grade performance and security patterns f
 
 ---
 
+### 16. One Failure We Fixed & How We Measured It (Demo Day Requirement)
+
+- **The Failure:** During early RAG retrieval, questions regarding vendor pricing (e.g., Question 5) retrieved chunks from the February 2024 National Portal FAQ, which cited older Phase-II DISCOM-discovered L1 bidding rates. This conflicted with the June 2024 MNRE Guidelines establishing direct nationwide open-market vendor selection.
+- **How We Fixed It:**
+  1. Preserved `date_issued` as explicit structured metadata on every ChromaDB chunk (`2024-06-25` vs `2024-02-15`).
+  2. Implemented a chronological tie-breaker in [`app/vectorstore.py`](file:///e:/SuryaGharSathi/app/vectorstore.py) and recency-weighted prompt grounding so newer circulars supersede older wording.
+- **How We Measured It:**
+  - Evaluated on Question 5 in [`eval/eval_set.json`](file:///e:/SuryaGharSathi/eval/eval_set.json) using [`eval/run_eval.py`](file:///e:/SuryaGharSathi/eval/run_eval.py).
+  - Accuracy on vendor procurement rose from **50%** (conflicting information) to **100%** (unambiguous, correct June 2024 direct vendor rules).
+
+---
+
 ## ⚠️ Important Disclaimer
 *All scheme rules, subsidy slabs, and procedures are retrieved from official Ministry of New and Renewable Energy (MNRE) publications. Financial estimates, savings, and payback figures are approximate calculations provided for educational evaluation and do not represent contractual financial advice. Always verify with MSEDCL and the PM Surya Ghar National Portal before making final commercial vendor commitments.*

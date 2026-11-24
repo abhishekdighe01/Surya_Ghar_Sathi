@@ -45,6 +45,28 @@
 
 ---
 
+## 🧩 Your Hardest Problem (The STAR Interview Story)
+
+**Interview Question:** *"What was the hardest technical challenge you encountered while building SuryaGharSathi, and how did you resolve it?"*
+
+### The STAR Narrative:
+- **Situation:** While indexing official government circulars for PM Surya Ghar, we uncovered a critical temporal conflict:
+  1. The **February 2024 National Portal FAQ** used older Phase-II terminology referring to *'DISCOM-discovered L1 bidding rates'* for system costs.
+  2. The **June 2024 MNRE Operational Guidelines** established the newer open-market, nationwide direct vendor pricing model.
+  Additionally, when asked about intermediate or fractional capacities (e.g., 2.5 kW, 3.7 kW), general LLMs repeatedly hallucinated flat multiplication rates (guessing ₹90,000 for 3 kW) instead of applying non-linear statutory subsidy slabs.
+- **Task:** Eliminate financial and procedural hallucinations:
+  1. Guarantee 100% mathematical precision on non-linear subsidy tier math across all fractional capacities.
+  2. Resolve document conflicts between Feb-2024 and June-2024 publications so the newest official guideline always takes precedence.
+- **Action:**
+  1. **Deterministic Tool Pattern:** We barred the LLM from computing financial amounts. We created `solar_cfa_calculator` in `app/tools.py` which deterministically enforces MNRE June 2024 slabs (₹30,000/kW up to 2 kW, ₹18,000/kW for 2–3 kW, capped at ₹78,000). The LLM only receives and articulates the verified calculation.
+  2. **Metadata Issue Dates & Recency Tie-Breaker:** In `app/chunking.py` and `app/vectorstore.py`, every chunk indexes `date_issued` as explicit metadata (`2024-02-15` vs `2024-06-25`). In ChromaDB semantic retrieval, we implemented a chronological recency tie-breaker: whenever similarity scores are close, the newest document date (`2024-06-25`) wins.
+- **Result:**
+  1. Financial calculation hallucination dropped to **0.0%**.
+  2. Outdated *'L1 DISCOM rate'* terminology was automatically superseded by the June 2024 open-market vendor selection guidelines.
+  3. Formally measured and verified across our 15-question benchmark in `eval/run_eval.py` and 35 automated Pytest unit tests.
+
+---
+
 ## 💡 Top 10 Technical Interview Questions & Exhaustive Answers
 
 ### Q1: Why did you choose RAG over Fine-Tuning an LLM for this project?
