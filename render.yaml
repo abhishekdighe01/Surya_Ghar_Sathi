@@ -1,0 +1,21 @@
+# ==============================================================================
+# File: render.yaml
+# Project: SuryaGharSathi (सूर्याघर साथी)
+# Description: Day 12 - Render Blueprint for One-Click Production Deployment
+# ==============================================================================
+
+services:
+  - type: web
+    name: suryagharsathi-api
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "8000"
+      - key: LLM_PROVIDER
+        value: "gemini"
+      - key: GEMINI_API_KEY
+        sync: false
