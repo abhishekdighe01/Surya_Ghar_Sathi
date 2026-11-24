@@ -24,12 +24,12 @@ Render provides native Docker support and reads our [render.yaml](file:///e:/Sur
 ### Step-by-Step Instructions:
 
 1. **Sign Up & Connect GitHub:**
-   - Go to [https://dashboard.render.com](https://dashboard.render.com) and sign in using your GitHub account (`abhishekdighe54`).
+   - Go to [https://dashboard.render.com](https://dashboard.render.com) and sign in using your GitHub account (`abhishekdighe01`).
 2. **Create New Blueprint:**
    - Click **"New +"** in the top navigation bar.
    - Select **"Blueprint"**.
 3. **Select Your Repository:**
-   - Choose `sanjivani-sj-64-suryagharsathi`.
+   - Choose `Surya_Ghar_Sathi`.
    - Render automatically detects `render.yaml` in the repository root.
 4. **Configure Environment Secrets:**
    - Under Environment Variables, supply your live Gemini API Key:

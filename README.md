@@ -1,6 +1,6 @@
 # SuryaGharSathi (सूर्याघर साथी) ☀️⚡
 
-[![SuryaGharSathi CI](https://github.com/abhishekdighe54/sanjivani-sj-64-suryagharsathi/actions/workflows/ci.yml/badge.svg)](https://github.com/abhishekdighe54/sanjivani-sj-64-suryagharsathi/actions)
+[![SuryaGharSathi CI](https://github.com/abhishekdighe01/Surya_Ghar_Sathi/actions/workflows/ci.yml/badge.svg)](https://github.com/abhishekdighe01/Surya_Ghar_Sathi/actions)
 ![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
 ![Tests](https://img.shields.io/badge/pytest-24%20passed-brightgreen.svg)
 ![Code Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)
