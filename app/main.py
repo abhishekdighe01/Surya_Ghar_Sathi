@@ -17,10 +17,13 @@ from pydantic import BaseModel, Field
 # Ensure project root is available for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from app.cache import query_cache
 from app.graph import langgraph_agent
 from app.llm import llm_engine
+from app.middleware import ObservabilityMiddleware
 from app.rag import rag_pipeline
 from app.records import get_by_id, load_records
+from app.security import security_guard
 from app.smart_search import smart_search_engine
 from app.vectorstore import vector_store
 
@@ -52,6 +55,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Add Observability and latency tracing middleware
+app.add_middleware(ObservabilityMiddleware)
 
 
 # ------------------------------------------------------------------------------
@@ -146,6 +151,16 @@ class AgentResponse(BaseModel):
     requires_approval: bool
     approved: bool
     thread_id: str
+
+
+class CacheStatsResponse(BaseModel):
+    active_entries: int
+    hits: int
+    misses: int
+    total_requests: int
+    hit_ratio: float
+    evictions: int
+    default_ttl_seconds: int
 
 
 
@@ -252,7 +267,14 @@ def search_semantic(
     summary="Submit and Log User Question"
 )
 def submit_question(payload: QuestionCreate):
-    """Accept and log a homeowner's solar question to data/questions.json."""
+    """Accept, sanitize, and log a homeowner's solar question to data/questions.json."""
+    sec_report = security_guard.validate_and_sanitize(payload.question)
+    if not sec_report.is_safe:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=sec_report.violation
+        )
+
     os.makedirs(os.path.dirname(QUESTIONS_FILE), exist_ok=True)
 
     # Read existing questions if file exists
@@ -269,7 +291,7 @@ def submit_question(payload: QuestionCreate):
     record_entry = {
         "id": new_id,
         "user_name": payload.user_name.strip() or "Anonymous Homeowner",
-        "question": payload.question.strip(),
+        "question": sec_report.sanitized_text,
         "saved_at": timestamp
     }
 
@@ -299,9 +321,16 @@ def chat_with_assistant(payload: ChatRequest):
     Accept homeowner questions, query the LLM provider with official MNRE grounding,
     and return structured JSON with citations and follow-up guidance.
     """
+    sec_report = security_guard.validate_and_sanitize(payload.question)
+    if not sec_report.is_safe:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=sec_report.violation
+        )
+
     try:
         response_data = llm_engine.generate(
-            question=payload.question,
+            question=sec_report.sanitized_text,
             user_name=payload.user_name or "Homeowner"
         )
         return ChatResponse(
@@ -325,16 +354,33 @@ def chat_with_assistant(payload: ChatRequest):
 )
 def ask_solar_assistant(payload: AskRequest):
     """
-    Day 8 - Grounded RAG query endpoint.
+    Day 8 & 13 - Grounded RAG query endpoint with Query Caching & Input Security.
     Retrieves dense semantic chunks from ChromaDB and synthesizes an authoritative,
-    hallucination-free answer with exact citations and confidence ratings.
+    hallucination-free answer with exact citations and sub-millisecond cache hits.
     """
+    sec_report = security_guard.validate_and_sanitize(payload.question)
+    if not sec_report.is_safe:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=sec_report.violation
+        )
+
+    top_k_val = payload.top_k or 3
+    cache_key = query_cache.compute_key(sec_report.sanitized_text, top_k=top_k_val)
+
+    # Check query cache
+    cached_response = query_cache.get(cache_key)
+    if cached_response:
+        return AskResponse(**cached_response)
+
     try:
         result = rag_pipeline.answer_question(
-            question=payload.question,
+            question=sec_report.sanitized_text,
             user_name=payload.user_name or "Homeowner",
-            top_k=payload.top_k or 3
+            top_k=top_k_val
         )
+        # Store successful synthesis in cache
+        query_cache.set(cache_key, result)
         return AskResponse(**result)
     except Exception as e:
         raise HTTPException(
@@ -351,11 +397,18 @@ def ask_solar_assistant(payload: AskRequest):
 )
 def run_solar_agent(payload: AgentRequest):
     """
-    Day 9 - LangGraph Solar Agent with memory, tool routing, and human-in-the-loop approval.
+    Day 9 & 13 - LangGraph Solar Agent with security guardrails, memory, and approval gate.
     """
+    sec_report = security_guard.validate_and_sanitize(payload.question)
+    if not sec_report.is_safe:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=sec_report.violation
+        )
+
     try:
         result = langgraph_agent.run(
-            question=payload.question,
+            question=sec_report.sanitized_text,
             user_name=payload.user_name or "Homeowner",
             monthly_bill=payload.monthly_bill or 2000.0,
             terrace_sqm=payload.terrace_sqm or 40.0,
@@ -368,5 +421,28 @@ def run_solar_agent(payload: AgentRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Agent workflow failed: {e!s}"
         )
+
+
+@app.get(
+    "/cache/stats",
+    response_model=CacheStatsResponse,
+    tags=["Observability"],
+    summary="Retrieve Query Cache Metrics"
+)
+def get_cache_stats():
+    """Return active cache entries, hits, misses, and hit ratio for observability."""
+    return query_cache.get_stats()
+
+
+@app.post(
+    "/cache/clear",
+    tags=["Observability"],
+    summary="Flush Query Cache"
+)
+def clear_cache():
+    """Flush all cached RAG responses and reset hit/miss counters."""
+    query_cache.clear()
+    return {"status": "ok", "message": "Query cache cleared successfully."}
+
 
 
