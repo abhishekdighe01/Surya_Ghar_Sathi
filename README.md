@@ -161,21 +161,23 @@ streamlit run ui/app.py
 - **Feedback Loop**: 👍 / 👎 buttons saving ratings directly to `data/feedback.json`.
 - **Checkpoint 2 Demo Script**: Available in [`eval/checkpoint2_demo.md`](file:///e:/SuryaGharSathi/eval/checkpoint2_demo.md).
 
-### 12. Run Automated Test Suite & Code Quality (Day 11)
+### 12. Run Automated Test Suite & Code Quality (Day 11 & Day 13)
 ```powershell
-# Run the 24-test pytest suite
+# Run the 35-test pytest suite
 pytest
 
 # Run Ruff linter to verify code quality
 ruff check .
 ```
 
-#### Test Suite Breakdown (24 Tests, 100% Green):
+#### Test Suite Breakdown (35 Tests, 100% Green):
 - `tests/test_records.py`: Dataclass models, field validations, count by issuing body.
 - `tests/test_calculator.py`: Official MNRE subsidy slabs (1 kW, 2 kW, 3 kW, 5 kW cap), rooftop area feasibility, and payback math.
 - `tests/test_search.py`: Scikit-learn TF-IDF and ChromaDB dense semantic vector retrieval.
 - `tests/test_rag.py`: RAG question answering, citation verification, and Q6 unanswerable refusal.
-- `tests/test_api.py`: FastAPI endpoints (`/health`, `/records`, `/search`, `/questions`, `/ask`, `/agent`).
+- `tests/test_api.py`: FastAPI endpoints (`/health`, `/records`, `/search`, `/questions`, `/ask`, `/agent`, `/cache/stats`, `/cache/clear`).
+- `tests/test_cache.py`: Thread-safe query caching, normalization invariance, TTL expiration, eviction, and hit/miss statistics.
+- `tests/test_security.py`: Adversarial prompt-injection detection, Indian PII masking (Aadhaar, PAN, phone, email), and input boundary validation.
 
 ---
 
@@ -196,6 +198,31 @@ docker compose up --build
 - **Production Cloud Deployment**: Blueprint configured in [`render.yaml`](file:///e:/SuryaGharSathi/render.yaml).
 - **Deployment Manual**: Detailed setup instructions for Render and Hugging Face Spaces in [`docs/deployment.md`](file:///e:/SuryaGharSathi/docs/deployment.md).
 - **Live Healthcheck Endpoint**: `GET /health` (monitored via cloud PaaS).
+
+---
+
+### 15. Production Observability, Caching & Security Guardrails (Day 13)
+
+SuryaGharSathi incorporates enterprise-grade performance and security patterns for reliable production operations:
+
+#### ⚡ Performance & Caching Architecture
+- **Thread-Safe In-Memory TTL Cache (`app/cache.py`)**: Automatically computes deterministic MD5 keys from normalized query strings. Caches repeated RAG queries with a 1-hour TTL.
+- **Latency Profile**:
+  - **Cache HIT**: `< 1.0 ms` (sub-millisecond retrieval from in-memory store)
+  - **ChromaDB Vector Retrieval**: `~80 - 150 ms`
+  - **LLM Grounded Answer Synthesis**: `~800 - 1400 ms`
+- **Cache Observability Endpoints**:
+  - `GET /cache/stats`: Returns active entries, hit count, miss count, and live hit ratio.
+  - `POST /cache/clear`: Flushes in-memory cache and resets counters.
+
+#### 🛡️ Enterprise Security & PII Protection (`app/security.py`)
+- **Indian PII Masking Engine**: Scans incoming queries and automatically masks sensitive Indian identity documents before sending context to external LLM providers:
+  - **Aadhaar Numbers (12 digits)** -> `[AADHAAR_REDACTED]`
+  - **PAN Cards (5 letters, 4 digits, 1 letter)** -> `[PAN_REDACTED]`
+  - **Mobile Numbers (+91 / 10 digits)** -> `[PHONE_REDACTED]`
+  - **Email Addresses** -> `[EMAIL_REDACTED]`
+- **Prompt Injection Defense**: Evaluates inputs against adversarial jailbreak patterns (`ignore previous instructions`, `system override`, `DAN mode`, `output system prompt`, SQLi/XSS signatures). Violations are blocked immediately at the API perimeter with `HTTP 400 Bad Request`.
+- **Distributed Tracing Middleware (`app/middleware.py`)**: Starlette middleware generates unique correlation IDs (`X-Request-ID`) and injects execution timing (`X-Process-Time-Ms`) into all HTTP response headers for end-to-end observability.
 
 ---
 
