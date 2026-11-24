@@ -58,11 +58,11 @@ app.add_middleware(
 # Pydantic Schemas for Requests and Responses
 # ------------------------------------------------------------------------------
 class HealthResponse(BaseModel):
-    status: str = Field(..., example="ok")
-    app: str = Field(..., example="SuryaGharSathi")
-    version: str = Field(..., example="1.0.0")
-    records_count: int = Field(..., example=20)
-    server_time: str = Field(..., example="2026-11-23T21:30:00")
+    status: str = Field(..., json_schema_extra={"example": "ok"})
+    app: str = Field(..., json_schema_extra={"example": "SuryaGharSathi"})
+    version: str = Field(..., json_schema_extra={"example": "1.0.0"})
+    records_count: int = Field(..., json_schema_extra={"example": 20})
+    server_time: str = Field(..., json_schema_extra={"example": "2026-11-23T21:30:00"})
 
 
 class RecordResponse(BaseModel):
@@ -80,8 +80,8 @@ class SearchRecordResponse(RecordResponse):
 
 
 class QuestionCreate(BaseModel):
-    question: str = Field(..., min_length=3, max_length=500, example="How much subsidy do I get for a 3 kW solar plant?")
-    user_name: str | None = Field(default="Anonymous Homeowner", example="Abhishek Dighe")
+    question: str = Field(..., min_length=3, max_length=500, json_schema_extra={"example": "How much subsidy do I get for a 3 kW solar plant?"})
+    user_name: str | None = Field(default="Anonymous Homeowner", json_schema_extra={"example": "Abhishek Dighe"})
 
 
 class QuestionResponse(BaseModel):
@@ -93,8 +93,8 @@ class QuestionResponse(BaseModel):
 
 
 class ChatRequest(BaseModel):
-    question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
-    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
+    question: str = Field(..., min_length=2, max_length=1000, json_schema_extra={"example": "How much central subsidy will I get for a 3 kW solar system?"})
+    user_name: str | None = Field(default="Homeowner", json_schema_extra={"example": "Abhishek Dighe"})
 
 
 class ChatResponse(BaseModel):
@@ -112,8 +112,8 @@ class SemanticChunkResponse(BaseModel):
 
 
 class AskRequest(BaseModel):
-    question: str = Field(..., min_length=2, max_length=1000, example="How much central subsidy will I get for a 3 kW solar system?")
-    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
+    question: str = Field(..., min_length=2, max_length=1000, json_schema_extra={"example": "How much central subsidy will I get for a 3 kW solar system?"})
+    user_name: str | None = Field(default="Homeowner", json_schema_extra={"example": "Abhishek Dighe"})
     top_k: int | None = Field(default=3, ge=1, le=10)
 
 
@@ -128,12 +128,13 @@ class AskResponse(BaseModel):
 
 
 class AgentRequest(BaseModel):
-    question: str = Field(..., min_length=2, max_length=1000, example="Can I install a 3 kW solar plant on my 40 sq m roof in Kopargaon?")
-    user_name: str | None = Field(default="Homeowner", example="Abhishek Dighe")
-    monthly_bill: float | None = Field(default=2000.0, example=2000.0)
-    terrace_sqm: float | None = Field(default=40.0, example=40.0)
+    question: str = Field(..., min_length=2, max_length=1000, json_schema_extra={"example": "Can I install a 3 kW solar plant on my 40 sq m roof in Kopargaon?"})
+    user_name: str | None = Field(default="Homeowner", json_schema_extra={"example": "Abhishek Dighe"})
+    monthly_bill: float | None = Field(default=2000.0, json_schema_extra={"example": 2000.0})
+    terrace_sqm: float | None = Field(default=40.0, json_schema_extra={"example": 40.0})
     approved: bool | None = Field(default=False, description="Approval flag for systems > 10 kW")
     thread_id: str | None = Field(default="default_session", description="Conversation thread identifier for memory")
+
 
 
 class AgentResponse(BaseModel):

@@ -1,5 +1,11 @@
 # SuryaGharSathi (सूर्याघर साथी) ☀️⚡
 
+[![SuryaGharSathi CI](https://github.com/abhishekdighe54/sanjivani-sj-64-suryagharsathi/actions/workflows/ci.yml/badge.svg)](https://github.com/abhishekdighe54/sanjivani-sj-64-suryagharsathi/actions)
+![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
+![Tests](https://img.shields.io/badge/pytest-24%20passed-brightgreen.svg)
+![Code Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)
+![Docker](https://img.shields.io/badge/docker-ready-2496ED.svg)
+
 An AI-powered advisory assistant for Indian homeowners navigating the **PM Surya Ghar: Muft Bijli Yojana**.
 
 ---
@@ -182,6 +188,14 @@ docker compose up --build
 # - Streamlit Web Dashboard: http://localhost:8501
 # - FastAPI REST API & Swagger Docs: http://localhost:8000/docs
 ```
+
+---
+
+### 14. Continuous Integration & Cloud Deployment (Day 12)
+- **Automated CI/CD Workflow**: [`.github/workflows/ci.yml`](file:///.github/workflows/ci.yml) executes on every push/PR to `main`, validating `ruff check .`, the 24-test `pytest` suite, and container image builds.
+- **Production Cloud Deployment**: Blueprint configured in [`render.yaml`](file:///e:/SuryaGharSathi/render.yaml).
+- **Deployment Manual**: Detailed setup instructions for Render and Hugging Face Spaces in [`docs/deployment.md`](file:///e:/SuryaGharSathi/docs/deployment.md).
+- **Live Healthcheck Endpoint**: `GET /health` (monitored via cloud PaaS).
 
 ---
 

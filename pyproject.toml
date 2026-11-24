@@ -10,3 +10,8 @@ ignore = ["E501"]  # line length handled by black/formatter
 addopts = "-p no:langsmith -q"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+filterwarnings = [
+    "ignore::FutureWarning",
+    "ignore::DeprecationWarning"
+]
+
