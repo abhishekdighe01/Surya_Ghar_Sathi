@@ -5,6 +5,9 @@
 # ==============================================================================
 
 services:
+  # ----------------------------------------------------------------------------
+  # 1. FastAPI Backend REST API Service
+  # ----------------------------------------------------------------------------
   - type: web
     name: suryagharsathi-api
     env: docker
@@ -13,8 +16,25 @@ services:
     region: oregon
     healthCheckPath: /health
     envVars:
-      - key: PORT
-        value: "8000"
+      - key: APP_MODE
+        value: "api"
+      - key: LLM_PROVIDER
+        value: "gemini"
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # ----------------------------------------------------------------------------
+  # 2. Streamlit Web Dashboard UI Service
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: suryagharsathi-ui
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: APP_MODE
+        value: "ui"
       - key: LLM_PROVIDER
         value: "gemini"
       - key: GEMINI_API_KEY
